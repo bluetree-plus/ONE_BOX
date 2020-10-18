@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/content.css":
+/*!*************************!*\
+  !*** ./src/content.css ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
 /***/ "./src/contentScript.js":
 /*!******************************!*\
   !*** ./src/contentScript.js ***!
@@ -95,7 +106,12 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _logic_content_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/content/init */ "./src/logic/content/init.js");
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./content.css */ "./src/content.css");
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _logic_content_init__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/content/init */ "./src/logic/content/init.js");
+/* harmony import */ var _logic_content_buildMainBtn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logic/content/buildMainBtn */ "./src/logic/content/buildMainBtn.js");
+
+
 
 
 
@@ -119,6 +135,36 @@ console.clear()
 
 /***/ }),
 
+/***/ "./src/logic/content/buildMainBtn.js":
+/*!*******************************************!*\
+  !*** ./src/logic/content/buildMainBtn.js ***!
+  \*******************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/createElement */ "./src/utils/createElement.js");
+
+/**
+ * 构建主按钮
+ */
+
+const mainBtn = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+  style: 'z-index:9999999!important;',
+  class: 'main__btn__'
+},
+  [
+    Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' })
+  ]
+)
+mainBtn.onclick = _ => {
+  console.info('滑稽')
+}
+document.querySelector('body[__is_]').appendChild(mainBtn)
+
+/***/ }),
+
 /***/ "./src/logic/content/init.js":
 /*!***********************************!*\
   !*** ./src/logic/content/init.js ***!
@@ -131,38 +177,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/createElement */ "./src/utils/createElement.js");
 
 
-const cvsWidth = document.documentElement.clientWidth
-const cvsHeight = document.documentElement.clientHeight
+/**
+ * 遮罩层初始化逻辑
+ */
 let request = null
-// 先加载到页面上
-const cvs = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('canvas', {
-  style: `background:rgba(255,0,0,0.3);position:fixed!important;
-  top:0!important;left:0!important;pointer-events:none!important;
-  z-index:9999999!important;margin:0!important;padding:0!important;
-  display:block!important;`,
-  width: `${cvsWidth}`,
-  height: `${cvsHeight}`,
-  class: '_____'
+const styleText = _ => (
+  Object.entries({
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    'pointer-events': 'none',
+    'z-index': '9999999',
+    margin: '0',
+    padding: '0',
+    display: 'block'
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev),
+    `width:${document.documentElement.clientWidth}px!important;
+    height:${document.documentElement.clientHeight}px!important;
+    background:rgba(0,0,0,${brightness});`
+  )
+)
+let brightness = 0
+
+chrome.runtime.sendMessage({
+  type: 'GET_BRIGHT_NESS'
+}, response => {
+  console.log(response.message)
+  brightness = response.message
+  dom.setAttribute('style', styleText())
 })
+
+// 先加载到页面上
+const dom = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+  style: styleText()
+})
+
 // 对 body 的临时引用
 let body = document.createElement('body')
+body.setAttribute('style', `position:absolute!important;
+top:0!important;left:0!important;margin:0!important;padding:0!important;`)
+body.setAttribute('__is_', true)
 document.documentElement.appendChild(body)
-body.appendChild(cvs)
+body.appendChild(dom)
 body = null
-
-const draw = ctx => {
-
-}
-
-chrome.runtime.sendMessage(
-  {
-    type: 'GET_BRIGHT_NESS'
-  },
-  response => {
-    console.log(response.message)
-  }
-)
-
 
 window.addEventListener('resize', _ => {
   if (request !== null) {
@@ -170,8 +227,7 @@ window.addEventListener('resize', _ => {
   }
   // 强制 60 Hz
   request = requestAnimationFrame(_ => {
-    cvs.width = document.documentElement.clientWidth
-    cvs.height = document.documentElement.clientHeight
+    dom.setAttribute('style', styleText())
     request = null
   })
 }, false)

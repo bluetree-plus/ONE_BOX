@@ -30,6 +30,9 @@
       "run_at": "document_start",
       "js": [
         "contentScript.js"
+      ],
+      "css": [
+        "contentScript.css"
       ]
     }
   ]

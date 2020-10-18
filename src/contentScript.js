@@ -1,6 +1,8 @@
 'use strict';
 
+import './content.css'
 import './logic/content/init'
+import './logic/content/buildMainBtn'
 
 console.clear()
 // Content script file will run in the context of web page.

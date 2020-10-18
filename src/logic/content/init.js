@@ -1,37 +1,48 @@
 import { h } from '../../utils/createElement'
 
-const cvsWidth = document.documentElement.clientWidth
-const cvsHeight = document.documentElement.clientHeight
+/**
+ * 遮罩层初始化逻辑
+ */
 let request = null
-// 先加载到页面上
-const cvs = h('canvas', {
-  style: `background:rgba(255,0,0,0.3);position:fixed!important;
-  top:0!important;left:0!important;pointer-events:none!important;
-  z-index:9999999!important;margin:0!important;padding:0!important;
-  display:block!important;`,
-  width: `${cvsWidth}`,
-  height: `${cvsHeight}`,
-  class: '_____'
+const styleText = _ => (
+  Object.entries({
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    'pointer-events': 'none',
+    'z-index': '9999999',
+    margin: '0',
+    padding: '0',
+    display: 'block'
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev),
+    `width:${document.documentElement.clientWidth}px!important;
+    height:${document.documentElement.clientHeight}px!important;
+    background:rgba(0,0,0,${brightness});`
+  )
+)
+let brightness = 0
+
+chrome.runtime.sendMessage({
+  type: 'GET_BRIGHT_NESS'
+}, response => {
+  console.log(response.message)
+  brightness = response.message
+  dom.setAttribute('style', styleText())
 })
+
+// 先加载到页面上
+const dom = h('div', {
+  style: styleText()
+})
+
 // 对 body 的临时引用
 let body = document.createElement('body')
+body.setAttribute('style', `position:absolute!important;
+top:0!important;left:0!important;margin:0!important;padding:0!important;`)
+body.setAttribute('__is_', true)
 document.documentElement.appendChild(body)
-body.appendChild(cvs)
+body.appendChild(dom)
 body = null
-
-const draw = ctx => {
-
-}
-
-chrome.runtime.sendMessage(
-  {
-    type: 'GET_BRIGHT_NESS'
-  },
-  response => {
-    console.log(response.message)
-  }
-)
-
 
 window.addEventListener('resize', _ => {
   if (request !== null) {
@@ -39,8 +50,7 @@ window.addEventListener('resize', _ => {
   }
   // 强制 60 Hz
   request = requestAnimationFrame(_ => {
-    cvs.width = document.documentElement.clientWidth
-    cvs.height = document.documentElement.clientHeight
+    dom.setAttribute('style', styleText())
     request = null
   })
 }, false)
