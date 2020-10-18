@@ -17,18 +17,31 @@ const styleText = _ => (
   }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev),
     `width:${document.documentElement.clientWidth}px!important;
     height:${document.documentElement.clientHeight}px!important;
-    background:rgba(0,0,0,${brightness});`
+    background:rgba(0,0,0,${_ === undefined ? brightness : _});`
   )
 )
+// 缓存，以供窗口尺寸变化时使用
 let brightness = 0
 
-chrome.runtime.sendMessage({
-  type: 'GET_BRIGHT_NESS'
-}, response => {
-  console.log(response.message)
-  brightness = response.message
-  dom.setAttribute('style', styleText())
-})
+const SEND_SET_BRIGHT_NESS = ({
+  isSave, value
+}) => {
+  console.info('SEND_SET_BRIGHT_NESS')
+  if (isSave) {
+    chrome.runtime.sendMessage({
+      type: 'GET_BRIGHT_NESS'
+    }, response => {
+      console.log(response.message)
+      brightness = response.message
+      dom.setAttribute('style', styleText())
+    })
+  } else {
+    brightness = value
+    dom.setAttribute('style', styleText(value))
+  }
+}
+
+SEND_SET_BRIGHT_NESS({ isSave: true })
 
 // 先加载到页面上
 const dom = h('div', {
@@ -54,3 +67,7 @@ window.addEventListener('resize', _ => {
     request = null
   })
 }, false)
+
+export default {
+  SEND_SET_BRIGHT_NESS
+}
