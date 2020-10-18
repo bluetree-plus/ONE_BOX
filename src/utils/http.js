@@ -1,6 +1,6 @@
-import { isObj as _is } from './isObj'
-import { returnStr as _return } from './returnStr'
-import { core } from './coreHttp'
+import { isObj as _is } from './is_object'
+import { returnStr as _return } from './return_specisl_string'
+import { core } from './core_http'
 
 const Http = (_ => {
 

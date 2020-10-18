@@ -1,4 +1,4 @@
-import { baseTime } from './baseTime'
+import { baseTime } from './base_time'
 
 export const core = ({
   url,

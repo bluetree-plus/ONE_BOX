@@ -1,12 +1,6 @@
 'use strict';
-
-import './content.css'
-import action from './logic/content/init'
-import './logic/content/buildMainBtn'
-
-console.clear()
-
-// action.SEND_SET_BRIGHT_NESS({ isSave: false, value: 0 })
+// 处理夜间模式以及可视化交互逻辑
+import './logic/content/content_bright_ness_logic'
 
 
 // Content script file will run in the context of web page.

@@ -13,8 +13,8 @@
  *  ]
  * )
  */
-import { isObj } from './isObj'
-import { isArr } from './isArr'
+import { isObj } from './is_object'
+import { isArr } from './is_array'
 
 export const h = (key, attr, children) => {
   if (

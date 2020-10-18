@@ -106,19 +106,10 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./content.css */ "./src/content.css");
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _logic_content_init__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/content/init */ "./src/logic/content/init.js");
-/* harmony import */ var _logic_content_buildMainBtn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logic/content/buildMainBtn */ "./src/logic/content/buildMainBtn.js");
+/* harmony import */ var _logic_content_content_bright_ness_logic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/content/content_bright_ness_logic */ "./src/logic/content/content_bright_ness_logic.js");
 
+// 处理夜间模式以及可视化交互逻辑
 
-
-
-
-
-console.clear()
-
-// action.SEND_SET_BRIGHT_NESS({ isSave: false, value: 0 })
 
 
 // Content script file will run in the context of web page.
@@ -139,46 +130,117 @@ console.clear()
 
 /***/ }),
 
-/***/ "./src/logic/content/buildMainBtn.js":
-/*!*******************************************!*\
-  !*** ./src/logic/content/buildMainBtn.js ***!
-  \*******************************************/
-/*! no exports provided */
+/***/ "./src/logic/content/build_main_btn.js":
+/*!*********************************************!*\
+  !*** ./src/logic/content/build_main_btn.js ***!
+  \*********************************************/
+/*! exports provided: moveBar, innerMoveBar */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/createElement */ "./src/utils/createElement.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveBar", function() { return moveBar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "innerMoveBar", function() { return innerMoveBar; });
+/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
 
 /**
  * 构建主按钮
  */
 
-const mainBtn = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
-  style: 'z-index:9999999!important;',
-  class: 'main__btn__'
-},
-  [
-    Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' })
-  ]
+// const mainBtn = h('div', {
+//   style: 'z-index:9999999!important;',
+//   class: 'main__btn__'
+// },
+//   [
+//     h('div', { class: 'inner_box' }, [
+//       h('div', { class: 'in_the_inner_box_left' }, [
+//         h('div', { class: 'move_bar' }, [
+//           h('div', { class: 'inner_move_bar' })
+//         ])
+//       ]),
+//       h('div', { class: 'in_the_inner_box_right' })
+//     ])
+//   ]
+// )
+// document.querySelector('body[__is_]').appendChild(mainBtn)
+
+document.querySelector('body[__is_]').appendChild(
+
+  Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+    style: 'z-index:9999999!important;',
+    class: 'main__btn__'
+  },
+    [
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
+        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
+          Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
+            Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
+          ])
+        ]),
+        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_right' })
+      ])
+    ]
+  )
+
 )
-mainBtn.onclick = _ => {
-  console.info('滑稽')
-}
-document.querySelector('body[__is_]').appendChild(mainBtn)
+
+const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
+const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
+
 
 /***/ }),
 
-/***/ "./src/logic/content/init.js":
-/*!***********************************!*\
-  !*** ./src/logic/content/init.js ***!
-  \***********************************/
+/***/ "./src/logic/content/content_bright_ness_logic.js":
+/*!********************************************************!*\
+  !*** ./src/logic/content/content_bright_ness_logic.js ***!
+  \********************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../content.css */ "./src/content.css");
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./init_brightness_bar */ "./src/logic/content/init_brightness_bar.js");
+/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/content/build_main_btn.js");
+
+
+
+
+console.clear()
+
+let request = null
+let saveY = 0
+
+_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].addEventListener('mousemove', e => {
+  e.stopPropagation()
+  request !== null && cancelAnimationFrame(request)
+  request = requestAnimationFrame(_ => {
+    if (saveY !== e.offsetY) {
+      const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"], null).height.replace(/\D/g, '')
+      let value = `${e.offsetY / height}`.replace(/(\d)(\.\d)\d*$/g, '$1$2')
+      console.info(height, e.offsetY, saveY, value)
+      _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_SET_BRIGHT_NESS({ isSave: false, value })
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerMoveBar"].style.height = `${e.offsetY}px`
+      saveY = e.offsetY
+    }
+    request = null
+  })
+}, false)
+
+
+/***/ }),
+
+/***/ "./src/logic/content/init_brightness_bar.js":
+/*!**************************************************!*\
+  !*** ./src/logic/content/init_brightness_bar.js ***!
+  \**************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/createElement */ "./src/utils/createElement.js");
+/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
 
 
 /**
@@ -207,6 +269,7 @@ let brightness = 0
 const SEND_SET_BRIGHT_NESS = ({
   isSave, value
 }) => {
+  // isSave 为真时存入后台缓存中
   console.info('SEND_SET_BRIGHT_NESS')
   if (isSave) {
     chrome.runtime.sendMessage({
@@ -225,7 +288,7 @@ const SEND_SET_BRIGHT_NESS = ({
 SEND_SET_BRIGHT_NESS({ isSave: true })
 
 // 先加载到页面上
-const dom = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
   style: styleText()
 })
 
@@ -239,9 +302,7 @@ body.appendChild(dom)
 body = null
 
 window.addEventListener('resize', _ => {
-  if (request !== null) {
-    return
-  }
+  request !== null && cancelAnimationFrame(request)
   // 强制 60 Hz
   request = requestAnimationFrame(_ => {
     dom.setAttribute('style', styleText())
@@ -255,18 +316,18 @@ window.addEventListener('resize', _ => {
 
 /***/ }),
 
-/***/ "./src/utils/createElement.js":
-/*!************************************!*\
-  !*** ./src/utils/createElement.js ***!
-  \************************************/
+/***/ "./src/utils/create_element.js":
+/*!*************************************!*\
+  !*** ./src/utils/create_element.js ***!
+  \*************************************/
 /*! exports provided: h */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return h; });
-/* harmony import */ var _isObj__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isObj */ "./src/utils/isObj.js");
-/* harmony import */ var _isArr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isArr */ "./src/utils/isArr.js");
+/* harmony import */ var _is_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./is_object */ "./src/utils/is_object.js");
+/* harmony import */ var _is_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./is_array */ "./src/utils/is_array.js");
 /**
  * h(
  *  'div',
@@ -288,8 +349,8 @@ __webpack_require__.r(__webpack_exports__);
 const h = (key, attr, children) => {
   if (
     typeof key !== 'string' ||
-    !Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(attr) ||
-    (!Object(_isArr__WEBPACK_IMPORTED_MODULE_1__["isArr"])(children) && children !== undefined)
+    !Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(attr) ||
+    (!Object(_is_array__WEBPACK_IMPORTED_MODULE_1__["isArr"])(children) && children !== undefined)
   ) {
     throw new Error('arguments error')
   }
@@ -310,10 +371,10 @@ const h = (key, attr, children) => {
 
 /***/ }),
 
-/***/ "./src/utils/isArr.js":
-/*!****************************!*\
-  !*** ./src/utils/isArr.js ***!
-  \****************************/
+/***/ "./src/utils/is_array.js":
+/*!*******************************!*\
+  !*** ./src/utils/is_array.js ***!
+  \*******************************/
 /*! exports provided: isArr */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -325,10 +386,10 @@ const isArr = _ => Object.prototype.toString.call(_).slice(8, -1) === 'Array'
 
 /***/ }),
 
-/***/ "./src/utils/isObj.js":
-/*!****************************!*\
-  !*** ./src/utils/isObj.js ***!
-  \****************************/
+/***/ "./src/utils/is_object.js":
+/*!********************************!*\
+  !*** ./src/utils/is_object.js ***!
+  \********************************/
 /*! exports provided: isObj */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

@@ -1,7 +1,7 @@
 'use strict';
 // ----------
 import './logic/bg/init'
-import { handler } from './logic/bg/messageListener'
+import { handler } from './logic/bg/message_listener'
 import $http from './utils/http'
 
 // With background scripts you can communicate with popup

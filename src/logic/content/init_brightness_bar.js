@@ -1,4 +1,4 @@
-import { h } from '../../utils/createElement'
+import { h } from '../../utils/create_element'
 
 /**
  * 遮罩层初始化逻辑
@@ -26,6 +26,7 @@ let brightness = 0
 const SEND_SET_BRIGHT_NESS = ({
   isSave, value
 }) => {
+  // isSave 为真时存入后台缓存中
   console.info('SEND_SET_BRIGHT_NESS')
   if (isSave) {
     chrome.runtime.sendMessage({
@@ -58,9 +59,7 @@ body.appendChild(dom)
 body = null
 
 window.addEventListener('resize', _ => {
-  if (request !== null) {
-    return
-  }
+  request !== null && cancelAnimationFrame(request)
   // 强制 60 Hz
   request = requestAnimationFrame(_ => {
     dom.setAttribute('style', styleText())

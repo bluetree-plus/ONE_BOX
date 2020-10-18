@@ -97,7 +97,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _logic_bg_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/bg/init */ "./src/logic/bg/init.js");
 /* harmony import */ var _logic_bg_init__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_logic_bg_init__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _logic_bg_messageListener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/bg/messageListener */ "./src/logic/bg/messageListener.js");
+/* harmony import */ var _logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/bg/message_listener */ "./src/logic/bg/message_listener.js");
 /* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
 
 // ----------
@@ -111,7 +111,7 @@ __webpack_require__.r(__webpack_exports__);
 // See https://developer.chrome.com/extensions/background_pages
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  Object(_logic_bg_messageListener__WEBPACK_IMPORTED_MODULE_1__["handler"])(request, sender, sendResponse)
+  Object(_logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__["handler"])(request, sender, sendResponse)
 })
 
 // 请求可以跨域
@@ -134,10 +134,10 @@ if (ness === null) {
 
 /***/ }),
 
-/***/ "./src/logic/bg/messageListener.js":
-/*!*****************************************!*\
-  !*** ./src/logic/bg/messageListener.js ***!
-  \*****************************************/
+/***/ "./src/logic/bg/message_listener.js":
+/*!******************************************!*\
+  !*** ./src/logic/bg/message_listener.js ***!
+  \******************************************/
 /*! exports provided: handler */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -159,10 +159,10 @@ const handler = (request, sender, sendResponse) => {
 
 /***/ }),
 
-/***/ "./src/utils/baseTime.js":
-/*!*******************************!*\
-  !*** ./src/utils/baseTime.js ***!
-  \*******************************/
+/***/ "./src/utils/base_time.js":
+/*!********************************!*\
+  !*** ./src/utils/base_time.js ***!
+  \********************************/
 /*! exports provided: baseTime */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -173,17 +173,17 @@ const baseTime = 5 * 60 * 1000
 
 /***/ }),
 
-/***/ "./src/utils/coreHttp.js":
-/*!*******************************!*\
-  !*** ./src/utils/coreHttp.js ***!
-  \*******************************/
+/***/ "./src/utils/core_http.js":
+/*!********************************!*\
+  !*** ./src/utils/core_http.js ***!
+  \********************************/
 /*! exports provided: core */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "core", function() { return core; });
-/* harmony import */ var _baseTime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./baseTime */ "./src/utils/baseTime.js");
+/* harmony import */ var _base_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base_time */ "./src/utils/base_time.js");
 
 
 const core = ({
@@ -210,7 +210,7 @@ const core = ({
   header && Object.entries(header).forEach(([k, v]) => k.toLowerCase() !== 'content-type' && xhr.setRequestHeader(k, v))
   xhr.setRequestHeader('content-type', type)
   xhr.responseType = responseType || 'json'
-  xhr.timeout = time || _baseTime__WEBPACK_IMPORTED_MODULE_0__["baseTime"]
+  xhr.timeout = time || _base_time__WEBPACK_IMPORTED_MODULE_0__["baseTime"]
   xhr.onerror = _ => reject(_)
   xhr.send(data)
 })
@@ -226,9 +226,9 @@ const core = ({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _isObj__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isObj */ "./src/utils/isObj.js");
-/* harmony import */ var _returnStr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./returnStr */ "./src/utils/returnStr.js");
-/* harmony import */ var _coreHttp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./coreHttp */ "./src/utils/coreHttp.js");
+/* harmony import */ var _is_object__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./is_object */ "./src/utils/is_object.js");
+/* harmony import */ var _return_specisl_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./return_specisl_string */ "./src/utils/return_specisl_string.js");
+/* harmony import */ var _core_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./core_http */ "./src/utils/core_http.js");
 
 
 
@@ -238,7 +238,7 @@ const Http = (_ => {
   const Http = function () { }
 
   Http.prototype.json = function (config) {
-    if (!Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
+    if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
       return Promise.resolve('[-1]')
     }
     let { url } = config
@@ -246,19 +246,19 @@ const Http = (_ => {
       return Promise.resolve('[-1]')
     }
     const { data, header, time, responseType } = config
-    return Object(_coreHttp__WEBPACK_IMPORTED_MODULE_2__["core"])({
+    return Object(_core_http__WEBPACK_IMPORTED_MODULE_2__["core"])({
       url,
       method: 'post',
-      data: Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) ? JSON.stringify(data) : null,
+      data: Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) ? JSON.stringify(data) : null,
       type: 'application/json; charset=utf-8',
       responseType: typeof responseType === 'string' ? responseType : undefined,
-      header: Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
+      header: Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
       time: typeof time === 'number' ? time : undefined
     })
   }
 
   Http.prototype.post = function (config) {
-    if (!Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
+    if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
       return Promise.resolve('[-1]')
     }
     let { url } = config
@@ -266,19 +266,19 @@ const Http = (_ => {
       return Promise.resolve('[-1]')
     }
     const { data, header, time, responseType } = config
-    return Object(_coreHttp__WEBPACK_IMPORTED_MODULE_2__["core"])({
+    return Object(_core_http__WEBPACK_IMPORTED_MODULE_2__["core"])({
       url,
       method: 'post',
-      data: Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) ? Object(_returnStr__WEBPACK_IMPORTED_MODULE_1__["returnStr"])(data, '') : null,
+      data: Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) ? Object(_return_specisl_string__WEBPACK_IMPORTED_MODULE_1__["returnStr"])(data, '') : null,
       type: 'application/x-www-form-urlencoded; charset=utf-8',
       responseType: typeof responseType === 'string' ? responseType : undefined,
-      header: Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
+      header: Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
       time: typeof time === 'number' ? time : undefined
     })
   }
 
   Http.prototype.get = function (config) {
-    if (!Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
+    if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
       return Promise.resolve('[-1]')
     }
     let { url } = config
@@ -286,14 +286,14 @@ const Http = (_ => {
       return Promise.resolve('[-1]')
     }
     const { data, header, time, responseType } = config
-    Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) && (url = `${url}${Object(_returnStr__WEBPACK_IMPORTED_MODULE_1__["returnStr"])(data, '?')}`)
-    return Object(_coreHttp__WEBPACK_IMPORTED_MODULE_2__["core"])({
+    Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) && (url = `${url}${Object(_return_specisl_string__WEBPACK_IMPORTED_MODULE_1__["returnStr"])(data, '?')}`)
+    return Object(_core_http__WEBPACK_IMPORTED_MODULE_2__["core"])({
       url,
       method: 'get',
       data: null,
       type: 'application/x-www-form-urlencoded; charset=utf-8',
       responseType: typeof responseType === 'string' ? responseType : undefined,
-      header: Object(_isObj__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
+      header: Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(header) ? header : undefined,
       time: typeof time === 'number' ? time : undefined
     })
   }
@@ -315,10 +315,10 @@ const Http = (_ => {
 
 /***/ }),
 
-/***/ "./src/utils/isObj.js":
-/*!****************************!*\
-  !*** ./src/utils/isObj.js ***!
-  \****************************/
+/***/ "./src/utils/is_object.js":
+/*!********************************!*\
+  !*** ./src/utils/is_object.js ***!
+  \********************************/
 /*! exports provided: isObj */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -330,10 +330,10 @@ const isObj = _ => Object.prototype.toString.call(_).slice(8, -1) === 'Object'
 
 /***/ }),
 
-/***/ "./src/utils/returnStr.js":
-/*!********************************!*\
-  !*** ./src/utils/returnStr.js ***!
-  \********************************/
+/***/ "./src/utils/return_specisl_string.js":
+/*!********************************************!*\
+  !*** ./src/utils/return_specisl_string.js ***!
+  \********************************************/
 /*! exports provided: returnStr */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
