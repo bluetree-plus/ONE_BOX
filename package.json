@@ -16,5 +16,9 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.2.0"
-  }
+  },
+  "main": "index.js",
+  "dependencies": {},
+  "author": "cagedbird",
+  "license": "ISC"
 }

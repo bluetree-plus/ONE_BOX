@@ -1,4 +1,8 @@
 'use strict';
+// ----------
+import './logic/bg/init'
+import { handler } from './logic/bg/messageListener'
+import $http from './utils/http'
 
 // With background scripts you can communicate with popup
 // and contentScript files.
@@ -6,16 +10,8 @@
 // See https://developer.chrome.com/extensions/background_pages
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
+  handler(request, sender, sendResponse)
+})
 
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
-    });
-  }
-});
+// 请求可以跨域
+console.info($http)

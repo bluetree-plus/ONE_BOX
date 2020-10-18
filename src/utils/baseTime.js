@@ -1,0 +1,1 @@
+export const baseTime = 5 * 60 * 1000

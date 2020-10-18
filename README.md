@@ -1,17 +1,16 @@
-# <img src="public/icons/icon_48.png" width="45" align="left"> One_box
+# One_box
 
-My Chrome Extension
+使用原生 ECMAScript 6+ 开发的 chrome extension
 
 ## Features
 
-- Feature 1
-- Feature 2
+- 功能处于开发中
+- ......
 
 ## Install
 
-[**Chrome** extension]() <!-- TODO: Add chrome extension link inside parenthesis -->
+- 开发中
 
 ## Contribution
 
-Suggestions and pull requests are welcomed!.
-
+- 开发中
