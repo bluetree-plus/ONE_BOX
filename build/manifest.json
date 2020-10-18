@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "One_box",
+  "version": "0.1.0",
+  "description": "A Chrome Extension",
+  "icons": {
+    "16": "icons/icon.png",
+    "32": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "One_box",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "contentScript.js"
+      ]
+    }
+  ]
+}
