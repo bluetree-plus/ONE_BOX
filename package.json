@@ -1,6 +1,6 @@
 {
   "name": "one_box",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "My Chrome Extension",
   "private": true,
   "scripts": {
