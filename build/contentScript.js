@@ -95,9 +95,12 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/createElement */ "./src/utils/createElement.js");
+/* harmony import */ var _logic_content_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/content/init */ "./src/logic/content/init.js");
 
 
+
+
+console.clear()
 // Content script file will run in the context of web page.
 // With content script you can manipulate the web pages using
 // Document Object Model (DOM).
@@ -113,6 +116,44 @@ __webpack_require__.r(__webpack_exports__);
 
 // Communicate with background file by sending a message
 
+
+/***/ }),
+
+/***/ "./src/logic/content/init.js":
+/*!***********************************!*\
+  !*** ./src/logic/content/init.js ***!
+  \***********************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_createElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/createElement */ "./src/utils/createElement.js");
+
+
+const cvsWidth = document.documentElement.clientWidth
+const cvsHeight = document.documentElement.clientHeight
+let request = null
+// 先加载到页面上
+const cvs = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('canvas', {
+  style: `background:rgba(255,0,0,0.3);position:fixed!important;
+  top:0!important;left:0!important;pointer-events:none!important;
+  z-index:9999999!important;margin:0!important;padding:0!important;
+  display:block!important;`,
+  width: `${cvsWidth}`,
+  height: `${cvsHeight}`,
+  class: '_____'
+})
+// 对 body 的临时引用
+let body = document.createElement('body')
+document.documentElement.appendChild(body)
+body.appendChild(cvs)
+body = null
+
+const draw = ctx => {
+
+}
+
 chrome.runtime.sendMessage(
   {
     type: 'GET_BRIGHT_NESS'
@@ -122,33 +163,18 @@ chrome.runtime.sendMessage(
   }
 )
 
-// Listen for message
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'COUNT') {
-    console.log(`Current count is ${request.payload.count}`);
+
+window.addEventListener('resize', _ => {
+  if (request !== null) {
+    return
   }
-
-  // Send an empty response
-  // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
-  sendResponse({});
-  return true;
-});
-
-// ----------
-
-console.clear()
-
-
-console.info(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"], typeof _utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])
-let dom = Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
-  style: 'background:red;',
-  class: '_____huajixxx'
-}, [
-  '滑稽', Object(_utils_createElement__WEBPACK_IMPORTED_MODULE_0__["h"])('span', {}, ['滑稽2s'])
-])
-
-document.body.appendChild(dom)
-
+  // 强制 60 Hz
+  request = requestAnimationFrame(_ => {
+    cvs.width = document.documentElement.clientWidth
+    cvs.height = document.documentElement.clientHeight
+    request = null
+  })
+}, false)
 
 /***/ }),
 
