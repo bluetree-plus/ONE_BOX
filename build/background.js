@@ -129,7 +129,7 @@ console.info(_utils_http__WEBPACK_IMPORTED_MODULE_2__["default"])
 
 const ness = localStorage.getItem('__bright_ness__')
 if (ness === null) {
-  localStorage.setItem('__bright_ness__', '0.8')
+  localStorage.setItem('__bright_ness__', '0')
 }
 
 /***/ }),
@@ -153,6 +153,11 @@ const handler = (request, sender, sendResponse) => {
       return sendResponse({
         message: localStorage.getItem('__bright_ness__'),
       })
+    case 'SET_BRIGHT_NESS':
+      {
+        localStorage.setItem('__bright_ness__', request.value)
+        return sendResponse()
+      }
     default: ;
   }
 }

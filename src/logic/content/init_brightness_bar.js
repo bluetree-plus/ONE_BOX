@@ -23,11 +23,10 @@ const styleText = _ => (
 // 缓存，以供窗口尺寸变化时使用
 let brightness = 0
 
-const SEND_SET_BRIGHT_NESS = ({
+const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
   isSave, value
 }) => {
-  // isSave 为真时存入后台缓存中
-  console.info('SEND_SET_BRIGHT_NESS')
+  // isSave 为真时获取后台存储的值
   if (isSave) {
     chrome.runtime.sendMessage({
       type: 'GET_BRIGHT_NESS'
@@ -37,12 +36,25 @@ const SEND_SET_BRIGHT_NESS = ({
       dom.setAttribute('style', styleText())
     })
   } else {
+    // isSave 为假时仅设置样式值
     brightness = value
     dom.setAttribute('style', styleText(value))
   }
 }
 
-SEND_SET_BRIGHT_NESS({ isSave: true })
+const SEND_SET_BRIGHT_NESS = ({
+  value
+}) => {
+  chrome.runtime.sendMessage({
+    type: 'SET_BRIGHT_NESS',
+    value
+  }, _ => {
+    console.log('延后执行 SEND_SET_BRIGHT_NESS')
+    brightness = value
+  })
+}
+
+SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
 
 // 先加载到页面上
 const dom = h('div', {
@@ -68,5 +80,6 @@ window.addEventListener('resize', _ => {
 }, false)
 
 export default {
+  SEND_GET_BRIGHT_NESS_SET_STYLE,
   SEND_SET_BRIGHT_NESS
 }

@@ -5,25 +5,23 @@
   width: 25px;
   height: 25px;
   border-radius: 25px;
-  box-shadow: 1px 1px 10px cyan inset;
-  /* transition: all 1s; */
+  box-shadow: 1px 1px 5px#90EE90 inset;
+  transition: all 1s;
   /*  */
-  width: 525px;
+  /* width: 525px;
   height: 525px;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 5px; */
 }
 
 /* 主按钮 */
 
-/* .main__btn__:hover {
+.main__btn__:hover {
   width: 525px;
   height: 525px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  cursor: pointer;
-} */
+}
 
 .main__btn__ .inner_box {
   padding-top: 25px;
@@ -44,7 +42,7 @@
 }
 
 .main__btn__ .inner_box .in_the_inner_box_left {
-  flex-grow: 0.1;
+  flex-grow: 0.05;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,18 +51,23 @@
 .main__btn__ .inner_box .in_the_inner_box_left .move_bar {
   height: 80%;
   width: 100%;
-  background: red;
+  border: 1px solid #FFD700;
+  box-shadow: 1px 1px 5px #fff inset;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar {
   width: 100%;
   height: 0;
-  background: #fff;
+  background: #90EE90;
+  border-radius: 5px;
 }
 
 .main__btn__ .inner_box .in_the_inner_box_right {
-  flex-grow: 0.9;
-  background: blue;
+  flex-grow: 0.95;
+  /* background: blue; */
 }
 
 /*# sourceMappingURL=contentScript.css.map*/

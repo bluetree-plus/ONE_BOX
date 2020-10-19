@@ -209,7 +209,16 @@ __webpack_require__.r(__webpack_exports__);
 
 console.clear()
 
+chrome.runtime.sendMessage({
+  type: 'GET_BRIGHT_NESS'
+}, response => {
+  const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"], null).height.replace(/\D/g, '')
+  const h = Math.floor(height * response.message)
+  _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerMoveBar"].style.height = `${h}px`
+})
+
 let request = null
+let _time = null
 let saveY = 0
 
 _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].addEventListener('mousemove', e => {
@@ -217,12 +226,20 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].addEventListener('mousem
   request !== null && cancelAnimationFrame(request)
   request = requestAnimationFrame(_ => {
     if (saveY !== e.offsetY) {
+      // 获取当前高度
       const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"], null).height.replace(/\D/g, '')
       let value = `${e.offsetY / height}`.replace(/(\d)(\.\d)\d*$/g, '$1$2')
-      console.info(height, e.offsetY, saveY, value)
-      _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_SET_BRIGHT_NESS({ isSave: false, value })
+      // console.info(height, e.offsetY, saveY, value)
+      console.info('move')
+      _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: false, value })
       _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerMoveBar"].style.height = `${e.offsetY}px`
       saveY = e.offsetY
+      _time !== null && clearTimeout(_time)
+      // 延后通知后台
+      _time = setTimeout(_ => {
+        _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_SET_BRIGHT_NESS({ value })
+        _time = null
+      }, 5000)
     }
     request = null
   })
@@ -266,11 +283,10 @@ const styleText = _ => (
 // 缓存，以供窗口尺寸变化时使用
 let brightness = 0
 
-const SEND_SET_BRIGHT_NESS = ({
+const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
   isSave, value
 }) => {
-  // isSave 为真时存入后台缓存中
-  console.info('SEND_SET_BRIGHT_NESS')
+  // isSave 为真时获取后台存储的值
   if (isSave) {
     chrome.runtime.sendMessage({
       type: 'GET_BRIGHT_NESS'
@@ -280,12 +296,25 @@ const SEND_SET_BRIGHT_NESS = ({
       dom.setAttribute('style', styleText())
     })
   } else {
+    // isSave 为假时仅设置样式值
     brightness = value
     dom.setAttribute('style', styleText(value))
   }
 }
 
-SEND_SET_BRIGHT_NESS({ isSave: true })
+const SEND_SET_BRIGHT_NESS = ({
+  value
+}) => {
+  chrome.runtime.sendMessage({
+    type: 'SET_BRIGHT_NESS',
+    value
+  }, _ => {
+    console.log('延后执行 SEND_SET_BRIGHT_NESS')
+    brightness = value
+  })
+}
+
+SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
 
 // 先加载到页面上
 const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
@@ -311,6 +340,7 @@ window.addEventListener('resize', _ => {
 }, false)
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  SEND_GET_BRIGHT_NESS_SET_STYLE,
   SEND_SET_BRIGHT_NESS
 });
 

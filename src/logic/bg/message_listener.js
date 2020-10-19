@@ -7,6 +7,11 @@ export const handler = (request, sender, sendResponse) => {
       return sendResponse({
         message: localStorage.getItem('__bright_ness__'),
       })
+    case 'SET_BRIGHT_NESS':
+      {
+        localStorage.setItem('__bright_ness__', request.value)
+        return sendResponse()
+      }
     default: ;
   }
 }
