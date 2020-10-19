@@ -15,21 +15,21 @@ body[__board__='__'] {
   height: 25px;
   border-radius: 25px;
   box-shadow: 1px 1px 5px#fff inset;
-  /* transition: all 1s; */
+  transition: all 1s;
   /*  */
-  width: 525px;
+  /* width: 525px;
   height: 525px;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  border-radius: 5px; */
 }
 
 /* 主按钮 */
 
 .main__btn__:hover {
-  /* width: 525px;
+  width: 525px;
   height: 525px;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 5px; */
+  border-radius: 5px;
 }
 
 .main__btn__ .inner_box {
