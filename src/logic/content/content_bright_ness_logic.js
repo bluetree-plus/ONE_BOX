@@ -11,14 +11,16 @@ chrome.runtime.sendMessage({
   innerMoveBar.style.height = `${h}px`
 })
 
-let requestOfMoveBar = null // 滑动条移动限频状态位
-let timeOfMoveBar = null // 滑动条延时器状态位
-let saveYOfMoveBar = 0
+let isMainBtnEnter = false
 
-let requestOfCanMove = null // 主按钮是否移动移动限频状态位
-let timeOfCanMove = null // 主按钮移动延时器状态位
-let saveYOfCanMove = 0
-let saveXOfCanMove = 0
+let requestOfMoveBar = null // 滑动条移动限频状态位
+let timeOfMoveBar = null // 滑动条延时通知后台状态位
+let saveYOfMoveBar = 0 // 内滑动条缓存
+
+let requestOfCanMove = null // 主按钮移动移动限频状态位
+let timeOfCanMove = null // 主按钮移动延时通知后台状态位
+let saveYOfCanMove = 0 // 主按钮横轴缓存
+let saveXOfCanMove = 0 // 主按钮纵轴缓存
 
 
 let isSwitchBarClick = false
@@ -54,25 +56,33 @@ moveBar.onmousemove = e => {
 
 
 window.addEventListener('mousemove', e => {
-  if (!isCanMoveClick) {
+  if (!isMainBtnEnter || !isCanMoveClick) {
     return
   }
   requestOfCanMove !== null && cancelAnimationFrame(requestOfCanMove)
   requestOfCanMove = requestAnimationFrame(_ => {
-    if (saveYOfCanMove !== e.clientY || saveXOfCanMove !== e.clientX) {
-      let left = Math.floor(e.clientX - 25 - 12.5)
-      let top = Math.floor(e.clientY - 450 - 12.5)
-      mainBtn.setAttribute('style',
-        Object.entries({
-          left: `${left}px`,
-          top: `${top}px`
-        }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
-      )
-      saveXOfCanMove = left
-      saveYOfCanMove = top
-      // 延后通知后台
-      console.info('滑稽')
+    // 左上角 (0, 0)
+    // 右上角 (document.documentElement.clientWidth - 25 - 10 - 25, 0)
+    // 左下角 (0, document.documentElement.clientHeight - 10 -25)
+    // 右下角 (document.documentElement.clientWidth - 25 - 10 - 25, document.documentElement.clientHeight - 10 -25)
+    let left = Math.floor(e.clientX - 12.5 - 10 - 25)
+    let top = Math.floor(e.clientY - 12.5)
+    if (left > document.documentElement.clientWidth - 25 - 10 - 25 || left < 0) {
+      return
     }
+    if (top > document.documentElement.clientHeight - 10 - 25 || top < 0) {
+      return
+    }
+    mainBtn.setAttribute('style',
+      Object.entries({
+        left: `${left}px`,
+        top: `${top}px`
+      }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
+    )
+    saveXOfCanMove = left
+    saveYOfCanMove = top
+    // 延后通知后台
+    console.info('滑稽')
   })
 }, false)
 
@@ -95,5 +105,5 @@ canMove.onclick = e => {
   console.info('滑稽 click', saveXOfCanMove, saveYOfCanMove)
 }
 
-mainBtn.onmouseenter = _ => innerBox.style.display = 'flex'
-// mainBtn.onmouseleave = _ => innerBox.style.display = 'none'
+mainBtn.onmouseenter = _ => (innerBox.style.display = 'flex', isMainBtnEnter = true)
+mainBtn.onmouseleave = _ => (innerBox.style.display = 'none', isMainBtnEnter = false)

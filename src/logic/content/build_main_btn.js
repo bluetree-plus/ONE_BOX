@@ -5,7 +5,7 @@ import { h } from '../../utils/create_element'
 
 const mainBtn = h('div', { class: 'main__btn__' },
   [
-    h('div', { class: 'inner_box' }, [
+    h('div', { class: 'inner_box', style: 'display:none;' }, [
       h('div', { class: 'switch' }, ['off']),
       h('div', { class: 'can_move' }),
       h('div', { class: 'in_the_inner_box_left' }, [
