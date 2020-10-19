@@ -8,6 +8,8 @@ body[__board__='__'] {
 
 .main__btn__ {
   cursor: pointer;
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
   z-index: 9999999!important;
   position: fixed;
   left: 300px;
@@ -16,6 +18,7 @@ body[__board__='__'] {
   height: 25px;
   border-radius: 25px;
   background: rgba(0, 0, 0, 0.1);
+  box-shadow: -1px -1px 1px #007fff;
 }
 
 .main__btn__:hover {
@@ -26,6 +29,8 @@ body[__board__='__'] {
 }
 
 .main__btn__ .inner_box {
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
   border-radius: 5px;
   border-bottom-left-radius: 0;
   padding: 10px;
@@ -42,6 +47,8 @@ body[__board__='__'] {
 }
 
 .main__btn__ .inner_box .switch, .main__btn__ .inner_box .can_move {
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
   position: absolute;
   width: 25px;
   height: 25px;
@@ -70,6 +77,8 @@ body[__board__='__'] {
 
 .main__btn__ .inner_box .in_the_inner_box_left, .main__btn__ .inner_box .in_the_inner_box_right {
   height: 100%;
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
 }
 
 .main__btn__ .inner_box .in_the_inner_box_left {
@@ -86,14 +95,16 @@ body[__board__='__'] {
 .main__btn__ .inner_box .in_the_inner_box_left .move_bar {
   height: 400px;
   width: 100%;
-  /* border: 1px solid #FFD700; */
   box-shadow: 1px 1px 5px #fff inset;
-  box-sizing: border-box;
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
   cursor: pointer;
   border-radius: 5px;
 }
 
 .main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar {
+  /* 很重要的样式问题 */
+  box-sizing: content-box;
   width: 100%;
   height: 0;
   background: #90EE90;
