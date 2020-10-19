@@ -7,13 +7,14 @@ body[__board__='__'] {
 }
 
 .main__btn__ {
+  user-select: none;
   position: fixed;
   right: 0;
   top: 0;
   width: 25px;
   height: 25px;
   border-radius: 25px;
-  box-shadow: 1px 1px 5px#90EE90 inset;
+  box-shadow: 1px 1px 5px#fff inset;
   /* transition: all 1s; */
   /*  */
   width: 525px;
@@ -50,6 +51,11 @@ body[__board__='__'] {
   height: 25px;
   border-radius: 25px;
   top: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #007fff;
+  cursor: pointer;
   box-shadow: 1px 1px 5px #fff inset;
 }
 

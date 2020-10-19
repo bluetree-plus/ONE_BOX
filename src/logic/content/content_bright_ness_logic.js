@@ -47,5 +47,9 @@ moveBar.onmousemove = e => {
 switchBar.onclick = e => {
   e.stopPropagation()
   isClick = !isClick
-  isClick ? switchBar.style.background = '#90EE90' : switchBar.style.background = ''
+  isClick
+    ? (switchBar.style.boxShadow = '1px 1px 5px #90EE90 inset',
+      switchBar.innerHTML = 'on')
+    : (switchBar.style.boxShadow = '1px 1px 5px #fff inset',
+      switchBar.innerHTML = 'off')
 }

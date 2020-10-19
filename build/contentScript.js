@@ -159,7 +159,7 @@ document.querySelector('body[__board__="__"]').appendChild(
   },
     [
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
-        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }),
+        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }, ['off']),
         Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
             Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
@@ -241,7 +241,11 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].onmousemove = e => {
 _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].onclick = e => {
   e.stopPropagation()
   isClick = !isClick
-  isClick ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#90EE90' : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = ''
+  isClick
+    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.boxShadow = '1px 1px 5px #90EE90 inset',
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'on')
+    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.boxShadow = '1px 1px 5px #fff inset',
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'off')
 }
 
 

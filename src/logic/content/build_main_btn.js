@@ -14,7 +14,7 @@ document.querySelector('body[__board__="__"]').appendChild(
   },
     [
       h('div', { class: 'inner_box' }, [
-        h('div', { class: 'switch' }),
+        h('div', { class: 'switch' }, ['off']),
         h('div', { class: 'in_the_inner_box_left' }, [
           h('div', { class: 'move_bar' }, [
             h('div', { class: 'inner_move_bar' })
