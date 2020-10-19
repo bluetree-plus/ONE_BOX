@@ -106,7 +106,11 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _logic_content_content_bright_ness_logic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/content/content_bright_ness_logic */ "./src/logic/content/content_bright_ness_logic.js");
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./content.css */ "./src/content.css");
+/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _logic_content_content_bright_ness_logic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/content/content_bright_ness_logic */ "./src/logic/content/content_bright_ness_logic.js");
+
+
 
 // 处理夜间模式以及可视化交互逻辑
 
@@ -134,27 +138,27 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./src/logic/content/build_main_btn.js ***!
   \*********************************************/
-/*! exports provided: moveBar, innerMoveBar, switchBar */
+/*! exports provided: default, innerBox, moveBar, innerMoveBar, switchBar, canMove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "innerBox", function() { return innerBox; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveBar", function() { return moveBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "innerMoveBar", function() { return innerMoveBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchBar", function() { return switchBar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canMove", function() { return canMove; });
 /* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
 
 /**
  * 构建主按钮
  */
 
-const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
-  style: 'z-index:9999999!important;',
-  class: 'main__btn__'
-},
+const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'main__btn__' },
   [
     Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }, ['off']),
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'can_move' }),
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
         Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
@@ -167,19 +171,13 @@ const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])(
 
 document.querySelector('body[__board__="__"]').appendChild(mainBtn)
 
+/* harmony default export */ __webpack_exports__["default"] = (mainBtn);
 const innerBox = document.querySelector('.main__btn__ .inner_box')
-
-mainBtn.onmouseenter = e => {
-  innerBox.style.display = 'flex'
-}
-
-mainBtn.onmouseleave = e => {
-  innerBox.style.display = 'none'
-}
-
 const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
 const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
 const switchBar = document.querySelector('.main__btn__ .inner_box .switch')
+const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
+
 
 
 /***/ }),
@@ -193,11 +191,8 @@ const switchBar = document.querySelector('.main__btn__ .inner_box .switch')
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../content.css */ "./src/content.css");
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./init_brightness_bar */ "./src/logic/content/init_brightness_bar.js");
-/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/content/build_main_btn.js");
-
+/* harmony import */ var _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_box */ "./src/logic/content/init_brightness_box.js");
+/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/content/build_main_btn.js");
 
 
 
@@ -206,59 +201,103 @@ console.clear()
 chrome.runtime.sendMessage({
   type: 'GET_BRIGHT_NESS'
 }, response => {
-  const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"], null).height.replace(/\D/g, '')
+  const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"], null).height.replace(/\D/g, '')
   const h = Math.floor(height * response.message)
-  _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerMoveBar"].style.height = `${h}px`
+  _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${h}px`
 })
 
-let request = null
-let _time = null
-let saveY = 0
-let isClick = false
+let requestOfMoveBar = null // 滑动条移动限频状态位
+let timeOfMoveBar = null // 滑动条延时器状态位
+let saveYOfMoveBar = 0
 
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].onmousemove = e => {
+let requestOfCanMove = null // 主按钮是否移动移动限频状态位
+let timeOfCanMove = null // 主按钮移动延时器状态位
+let saveYOfCanMove = 0
+let saveXOfCanMove = 0
+
+
+let isSwitchBarClick = false
+let isCanMoveClick = false
+
+// 事件监听器、事件绑定
+_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"].onmousemove = e => {
   e.stopPropagation()
-  if (!isClick) {
+  if (!isSwitchBarClick) {
     return
   }
-  request !== null && cancelAnimationFrame(request)
-  request = requestAnimationFrame(_ => {
-    if (saveY !== e.offsetY) {
+  requestOfMoveBar !== null && cancelAnimationFrame(requestOfMoveBar)
+  requestOfMoveBar = requestAnimationFrame(_ => {
+    if (saveYOfMoveBar !== e.offsetY) {
       // 获取当前高度
-      const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"], null).height.replace(/\D/g, '')
+      const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"], null).height.replace(/\D/g, '')
       let value = `${e.offsetY / height}`.replace(/(\d)(\.\d)\d*$/g, '$1$2')
-      // console.info(height, e.offsetY, saveY, value)
+      // console.info(height, e.offsetY, saveYOfMoveBar, value)
       console.info('move')
-      _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: false, value })
-      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerMoveBar"].style.height = `${e.offsetY}px`
-      saveY = e.offsetY
-      _time !== null && clearTimeout(_time)
+      _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: false, value })
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${e.offsetY}px`
+      saveYOfMoveBar = e.offsetY
       // 延后通知后台
-      _time = setTimeout(_ => {
-        _init_brightness_bar__WEBPACK_IMPORTED_MODULE_1__["default"].SEND_SET_BRIGHT_NESS({ value })
-        _time = null
+      timeOfMoveBar !== null && clearTimeout(timeOfMoveBar)
+      timeOfMoveBar = setTimeout(_ => {
+        _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_SET_BRIGHT_NESS({ value })
+        timeOfMoveBar = null
       }, 5000)
     }
-    request = null
+    requestOfMoveBar = null
   })
 }
 
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].onclick = e => {
+
+window.addEventListener('mousemove', e => {
+  if (!isCanMoveClick) {
+    return
+  }
+  requestOfCanMove !== null && cancelAnimationFrame(requestOfCanMove)
+  requestOfCanMove = requestAnimationFrame(_ => {
+    if (saveYOfCanMove !== e.clientY || saveXOfCanMove !== e.clientX) {
+      let left = Math.floor(e.clientX - 25 - 12.5)
+      let top = Math.floor(e.clientY - 450 - 12.5)
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].setAttribute('style',
+        Object.entries({
+          left: `${left}px`,
+          top: `${top}px`
+        }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
+      )
+      saveXOfCanMove = left
+      saveYOfCanMove = top
+      // 延后通知后台
+      console.info('滑稽')
+    }
+  })
+}, false)
+
+_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].onclick = e => {
   e.stopPropagation()
-  isClick = !isClick
-  isClick
-    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.boxShadow = '1px 1px 5px #90EE90 inset',
-      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'on')
-    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.boxShadow = '1px 1px 5px #fff inset',
-      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'off')
+  isSwitchBarClick = !isSwitchBarClick
+  isSwitchBarClick
+    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.boxShadow = '1px 1px 5px #90EE90 inset',
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].innerHTML = 'on')
+    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.boxShadow = '1px 1px 5px #fff inset',
+      _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].innerHTML = 'off')
 }
 
+_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].onclick = e => {
+  e.stopPropagation()
+  isCanMoveClick = !isCanMoveClick
+  isCanMoveClick
+    ? _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.boxShadow = '1px 1px 5px #90EE90 inset'
+    : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.boxShadow = '1px 1px 5px #fff inset'
+  console.info('滑稽 click', saveXOfCanMove, saveYOfCanMove)
+}
+
+_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onmouseenter = _ => _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerBox"].style.display = 'flex'
+// mainBtn.onmouseleave = _ => innerBox.style.display = 'none'
 
 /***/ }),
 
-/***/ "./src/logic/content/init_brightness_bar.js":
+/***/ "./src/logic/content/init_brightness_box.js":
 /*!**************************************************!*\
-  !*** ./src/logic/content/init_brightness_bar.js ***!
+  !*** ./src/logic/content/init_brightness_box.js ***!
   \**************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -331,7 +370,7 @@ const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div
 
 // 对 body 的临时引用
 let body = document.createElement('body')
-body.setAttribute('__board__','__')
+body.setAttribute('__board__', '__')
 document.documentElement.appendChild(body)
 body.appendChild(dom)
 body = null

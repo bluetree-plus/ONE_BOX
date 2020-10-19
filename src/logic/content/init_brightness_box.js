@@ -63,7 +63,7 @@ const dom = h('div', {
 
 // 对 body 的临时引用
 let body = document.createElement('body')
-body.setAttribute('__board__','__')
+body.setAttribute('__board__', '__')
 document.documentElement.appendChild(body)
 body.appendChild(dom)
 body = null

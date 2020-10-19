@@ -1,4 +1,6 @@
 'use strict';
+
+import './content.css'
 // 处理夜间模式以及可视化交互逻辑
 import './logic/content/content_bright_ness_logic'
 
