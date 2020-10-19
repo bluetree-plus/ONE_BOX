@@ -148,29 +148,34 @@ __webpack_require__.r(__webpack_exports__);
  * 构建主按钮
  */
 
-// const mainBtn = 
-// document.querySelector('body[__board__="__"]').appendChild(mainBtn)
-
-document.querySelector('body[__board__="__"]').appendChild(
-
-  Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
-    style: 'z-index:9999999!important;',
-    class: 'main__btn__'
-  },
-    [
-      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
-        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }, ['off']),
-        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
-          Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
-            Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
-          ])
-        ]),
-        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_right' })
-      ])
-    ]
-  )
-
+const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+  style: 'z-index:9999999!important;',
+  class: 'main__btn__'
+},
+  [
+    Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }, ['off']),
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
+        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
+          Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
+        ])
+      ]),
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_right' })
+    ])
+  ]
 )
+
+document.querySelector('body[__board__="__"]').appendChild(mainBtn)
+
+const innerBox = document.querySelector('.main__btn__ .inner_box')
+
+mainBtn.onmouseenter = e => {
+  innerBox.style.display = 'flex'
+}
+
+mainBtn.onmouseleave = e => {
+  innerBox.style.display = 'none'
+}
 
 const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
 const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')

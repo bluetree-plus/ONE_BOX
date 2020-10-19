@@ -15,7 +15,7 @@ body[__board__='__'] {
   height: 25px;
   border-radius: 25px;
   box-shadow: 1px 1px 5px#fff inset;
-  transition: all 1s;
+  transition: all 0.5s;
   /*  */
   /* width: 525px;
   height: 525px;
