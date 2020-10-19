@@ -158,7 +158,7 @@ const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])(
   [
     Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box', style: 'display:none;' }, [
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }, ['off']),
-      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'can_move' }),
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'can_move' }, ['m']),
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
         Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
@@ -285,9 +285,9 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].onclick = e => {
   e.stopPropagation()
   isSwitchBarClick = !isSwitchBarClick
   isSwitchBarClick
-    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.boxShadow = '1px 1px 5px #90EE90 inset',
+    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.background = '#90EE90',
       _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].innerHTML = 'on')
-    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.boxShadow = '1px 1px 5px #fff inset',
+    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].style.background = '#fff',
       _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["switchBar"].innerHTML = 'off')
 }
 
@@ -295,8 +295,8 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].onclick = e => {
   e.stopPropagation()
   isCanMoveClick = !isCanMoveClick
   isCanMoveClick
-    ? _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.boxShadow = '1px 1px 5px #90EE90 inset'
-    : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.boxShadow = '1px 1px 5px #fff inset'
+    ? _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.background = '#90EE90'
+    : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.background = '#fff'
   console.info('滑稽 click', saveXOfCanMove, saveYOfCanMove)
 }
 
@@ -323,19 +323,10 @@ __webpack_require__.r(__webpack_exports__);
 let request = null
 const styleText = _ => (
   Object.entries({
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    'pointer-events': 'none',
-    'z-index': '9999999',
-    margin: '0',
-    padding: '0',
-    display: 'block'
-  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev),
-    `width:${document.documentElement.clientWidth}px!important;
-    height:${document.documentElement.clientHeight}px!important;
-    background:rgba(0,0,0,${_ === undefined ? brightness : _});`
-  )
+    width: `${document.documentElement.clientWidth}px`,
+    height: `${document.documentElement.clientHeight}px`,
+    background: `rgba(0,0,0,${_ === undefined ? brightness : _})`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev), '')
 )
 // 缓存，以供窗口尺寸变化时使用
 let brightness = 0
@@ -375,6 +366,7 @@ SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
 
 // 先加载到页面上
 const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+  class: '_box__',
   style: styleText()
 })
 

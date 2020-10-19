@@ -90,9 +90,9 @@ switchBar.onclick = e => {
   e.stopPropagation()
   isSwitchBarClick = !isSwitchBarClick
   isSwitchBarClick
-    ? (switchBar.style.boxShadow = '1px 1px 5px #90EE90 inset',
+    ? (switchBar.style.background = '#90EE90',
       switchBar.innerHTML = 'on')
-    : (switchBar.style.boxShadow = '1px 1px 5px #fff inset',
+    : (switchBar.style.background = '#fff',
       switchBar.innerHTML = 'off')
 }
 
@@ -100,8 +100,8 @@ canMove.onclick = e => {
   e.stopPropagation()
   isCanMoveClick = !isCanMoveClick
   isCanMoveClick
-    ? canMove.style.boxShadow = '1px 1px 5px #90EE90 inset'
-    : canMove.style.boxShadow = '1px 1px 5px #fff inset'
+    ? canMove.style.background = '#90EE90'
+    : canMove.style.background = '#fff'
   console.info('滑稽 click', saveXOfCanMove, saveYOfCanMove)
 }
 

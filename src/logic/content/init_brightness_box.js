@@ -6,19 +6,10 @@ import { h } from '../../utils/create_element'
 let request = null
 const styleText = _ => (
   Object.entries({
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    'pointer-events': 'none',
-    'z-index': '9999999',
-    margin: '0',
-    padding: '0',
-    display: 'block'
-  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev),
-    `width:${document.documentElement.clientWidth}px!important;
-    height:${document.documentElement.clientHeight}px!important;
-    background:rgba(0,0,0,${_ === undefined ? brightness : _});`
-  )
+    width: `${document.documentElement.clientWidth}px`,
+    height: `${document.documentElement.clientHeight}px`,
+    background: `rgba(0,0,0,${_ === undefined ? brightness : _})`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev), '')
 )
 // 缓存，以供窗口尺寸变化时使用
 let brightness = 0
@@ -58,6 +49,7 @@ SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
 
 // 先加载到页面上
 const dom = h('div', {
+  class: '_box__',
   style: styleText()
 })
 
