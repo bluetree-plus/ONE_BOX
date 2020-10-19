@@ -134,37 +134,24 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./src/logic/content/build_main_btn.js ***!
   \*********************************************/
-/*! exports provided: moveBar, innerMoveBar */
+/*! exports provided: moveBar, innerMoveBar, switchBar */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveBar", function() { return moveBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "innerMoveBar", function() { return innerMoveBar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchBar", function() { return switchBar; });
 /* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
 
 /**
  * 构建主按钮
  */
 
-// const mainBtn = h('div', {
-//   style: 'z-index:9999999!important;',
-//   class: 'main__btn__'
-// },
-//   [
-//     h('div', { class: 'inner_box' }, [
-//       h('div', { class: 'in_the_inner_box_left' }, [
-//         h('div', { class: 'move_bar' }, [
-//           h('div', { class: 'inner_move_bar' })
-//         ])
-//       ]),
-//       h('div', { class: 'in_the_inner_box_right' })
-//     ])
-//   ]
-// )
-// document.querySelector('body[__is_]').appendChild(mainBtn)
+// const mainBtn = 
+// document.querySelector('body[__board__="__"]').appendChild(mainBtn)
 
-document.querySelector('body[__is_]').appendChild(
+document.querySelector('body[__board__="__"]').appendChild(
 
   Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
     style: 'z-index:9999999!important;',
@@ -172,6 +159,7 @@ document.querySelector('body[__is_]').appendChild(
   },
     [
       Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_box' }, [
+        Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'switch' }),
         Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_left' }, [
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
             Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
@@ -186,6 +174,7 @@ document.querySelector('body[__is_]').appendChild(
 
 const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
 const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
+const switchBar = document.querySelector('.main__btn__ .inner_box .switch')
 
 
 /***/ }),
@@ -220,9 +209,13 @@ chrome.runtime.sendMessage({
 let request = null
 let _time = null
 let saveY = 0
+let isClick = false
 
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].addEventListener('mousemove', e => {
+_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].onmousemove = e => {
   e.stopPropagation()
+  if (!isClick) {
+    return
+  }
   request !== null && cancelAnimationFrame(request)
   request = requestAnimationFrame(_ => {
     if (saveY !== e.offsetY) {
@@ -243,7 +236,13 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].addEventListener('mousem
     }
     request = null
   })
-}, false)
+}
+
+_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].onclick = e => {
+  e.stopPropagation()
+  isClick = !isClick
+  isClick ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#90EE90' : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = ''
+}
 
 
 /***/ }),
@@ -323,9 +322,7 @@ const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div
 
 // 对 body 的临时引用
 let body = document.createElement('body')
-body.setAttribute('style', `position:absolute!important;
-top:0!important;left:0!important;margin:0!important;padding:0!important;`)
-body.setAttribute('__is_', true)
+body.setAttribute('__board__','__')
 document.documentElement.appendChild(body)
 body.appendChild(dom)
 body = null

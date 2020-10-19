@@ -1,6 +1,6 @@
 import '../../content.css'
 import ACTION from './init_brightness_bar'
-import { moveBar, innerMoveBar } from './build_main_btn'
+import { moveBar, innerMoveBar, switchBar } from './build_main_btn'
 
 console.clear()
 
@@ -15,9 +15,13 @@ chrome.runtime.sendMessage({
 let request = null
 let _time = null
 let saveY = 0
+let isClick = false
 
-moveBar.addEventListener('mousemove', e => {
+moveBar.onmousemove = e => {
   e.stopPropagation()
+  if (!isClick) {
+    return
+  }
   request !== null && cancelAnimationFrame(request)
   request = requestAnimationFrame(_ => {
     if (saveY !== e.offsetY) {
@@ -38,4 +42,10 @@ moveBar.addEventListener('mousemove', e => {
     }
     request = null
   })
-}, false)
+}
+
+switchBar.onclick = e => {
+  e.stopPropagation()
+  isClick = !isClick
+  isClick ? switchBar.style.background = '#90EE90' : switchBar.style.background = ''
+}

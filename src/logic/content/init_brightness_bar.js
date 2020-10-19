@@ -63,9 +63,7 @@ const dom = h('div', {
 
 // 对 body 的临时引用
 let body = document.createElement('body')
-body.setAttribute('style', `position:absolute!important;
-top:0!important;left:0!important;margin:0!important;padding:0!important;`)
-body.setAttribute('__is_', true)
+body.setAttribute('__board__','__')
 document.documentElement.appendChild(body)
 body.appendChild(dom)
 body = null
