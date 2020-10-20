@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/contentScript.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/content_script.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -97,10 +97,10 @@
 
 /***/ }),
 
-/***/ "./src/contentScript.js":
-/*!******************************!*\
-  !*** ./src/contentScript.js ***!
-  \******************************/
+/***/ "./src/content_script.js":
+/*!*******************************!*\
+  !*** ./src/content_script.js ***!
+  \*******************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -535,4 +535,4 @@ const isObj = _ => Object.prototype.toString.call(_).slice(8, -1) === 'Object'
 /***/ })
 
 /******/ });
-//# sourceMappingURL=contentScript.js.map
+//# sourceMappingURL=content_script.js.map
