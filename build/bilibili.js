@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-
+console.info('哔哩哔哩')
 
 /***/ })
 
