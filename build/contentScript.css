@@ -29,14 +29,7 @@ body[__board__='__'] {
   border-radius: 25px;
   background: rgba(0, 0, 0, 0.1);
   box-shadow: 1px 1px 10px #007fff;
-}
-
-.main__btn__:hover {
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0.8);
-  height: 35px;
-  border-top-left-radius: 25px;
-  border-bottom-left-radius: 25px;
+  cursor: pointer;
 }
 
 .main__btn__ .inner_box {
@@ -56,6 +49,7 @@ body[__board__='__'] {
   justify-content: space-between;
   box-shadow: 1px 1px 10px #007fff;
   align-items: flex-start;
+  cursor: initial;
 }
 
 .main__btn__ .inner_box .switch, .main__btn__ .inner_box .can_move {

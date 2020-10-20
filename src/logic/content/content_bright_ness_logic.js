@@ -40,7 +40,7 @@ const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
   }, _ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
 }
 
-let isMainBtnEnter = false
+let isMainBtnClick = false // 主按钮是否点击
 
 let requestOfMoveBar = null // 滑动条移动限频状态位
 let timeOfMoveBar = null // 滑动条延时通知后台状态位
@@ -50,8 +50,8 @@ let requestOfCanMove = null // 主按钮移动移动限频状态位
 let timeOfCanMove = null // 主按钮移动延时通知后台状态位
 
 
-let isSwitchBarClick = false
-let isCanMoveClick = false
+let isSwitchBarClick = false // 亮度调节按钮是否点击
+let isCanMoveClick = false // 是否可移动状态位
 
 // 事件监听器、事件绑定
 moveBar.onmousemove = e => {
@@ -83,7 +83,7 @@ moveBar.onmousemove = e => {
 
 
 window.addEventListener('mousemove', e => {
-  if (!isMainBtnEnter || !isCanMoveClick) {
+  if (!isMainBtnClick || !isCanMoveClick) {
     return
   }
   requestOfCanMove !== null && cancelAnimationFrame(requestOfCanMove)
@@ -129,5 +129,11 @@ canMove.onclick = e => {
     : canMove.style.background = '#fff'
 }
 
-mainBtn.onmouseenter = _ => (innerBox.style.display = 'flex', isMainBtnEnter = true)
-mainBtn.onmouseleave = _ => (innerBox.style.display = 'none', isMainBtnEnter = false)
+
+mainBtn.onclick = e => {
+  e.stopPropagation()
+  isMainBtnClick = !isMainBtnClick
+  isMainBtnClick
+    ? innerBox.style.display = 'flex'
+    : innerBox.style.display = 'none'
+}
