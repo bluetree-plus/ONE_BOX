@@ -401,6 +401,8 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].onclick = e => {
     : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.background = '#fff'
 }
 
+_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"].onclick = e => e.stopPropagation()
+
 _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onclick = e => {
   e.stopPropagation()
   isMainBtnClick = !isMainBtnClick

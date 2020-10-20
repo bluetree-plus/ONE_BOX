@@ -129,6 +129,8 @@ canMove.onclick = e => {
     : canMove.style.background = '#fff'
 }
 
+moveBar.onclick = e => e.stopPropagation()
+
 mainBtn.onclick = e => {
   e.stopPropagation()
   isMainBtnClick = !isMainBtnClick
