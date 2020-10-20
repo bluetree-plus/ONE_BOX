@@ -29,10 +29,10 @@
       ],
       "run_at": "document_start",
       "js": [
-        "content_script.js"
+        "brightness.js"
       ],
       "css": [
-        "content_script.css"
+        "brightness.css"
       ]
     }
   ]

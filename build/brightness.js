@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/content_script.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/brightness.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/content.css":
-/*!*************************!*\
-  !*** ./src/content.css ***!
-  \*************************/
+/***/ "./src/brightness.css":
+/*!****************************!*\
+  !*** ./src/brightness.css ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -97,18 +97,18 @@
 
 /***/ }),
 
-/***/ "./src/content_script.js":
-/*!*******************************!*\
-  !*** ./src/content_script.js ***!
-  \*******************************/
+/***/ "./src/brightness.js":
+/*!***************************!*\
+  !*** ./src/brightness.js ***!
+  \***************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./content.css */ "./src/content.css");
-/* harmony import */ var _content_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_content_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _logic_content_content_bright_ness_logic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/content/content_bright_ness_logic */ "./src/logic/content/content_bright_ness_logic.js");
+/* harmony import */ var _brightness_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brightness.css */ "./src/brightness.css");
+/* harmony import */ var _brightness_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_brightness_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _logic_brightness_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/brightness/main */ "./src/logic/brightness/main.js");
 
 
 
@@ -116,28 +116,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// Content script file will run in the context of web page.
-// With content script you can manipulate the web pages using
-// Document Object Model (DOM).
-// You can also pass information to the parent extension.
-
-// We execute this script by making an entry in manifest.json file
-// under `content_scripts` property
-
-// For more information on Content Scripts,
-// See https://developer.chrome.com/extensions/content_scripts
-
-// Log `title` of current active web page
-
-// Communicate with background file by sending a message
-
-
 /***/ }),
 
-/***/ "./src/logic/content/build_main_btn.js":
-/*!*********************************************!*\
-  !*** ./src/logic/content/build_main_btn.js ***!
-  \*********************************************/
+/***/ "./src/logic/brightness/build_main_btn.js":
+/*!************************************************!*\
+  !*** ./src/logic/brightness/build_main_btn.js ***!
+  \************************************************/
 /*! exports provided: default, innerBox, moveBar, innerMoveBar, switchBar, canMove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -181,21 +165,138 @@ const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
 
 /***/ }),
 
-/***/ "./src/logic/content/content_bright_ness_logic.js":
-/*!********************************************************!*\
-  !*** ./src/logic/content/content_bright_ness_logic.js ***!
-  \********************************************************/
+/***/ "./src/logic/brightness/init_brightness_board.js":
+/*!*******************************************************!*\
+  !*** ./src/logic/brightness/init_brightness_board.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
+
+
+
+/**
+ * 遮罩层初始化逻辑
+ */
+
+let request = null
+// 缓存，以供窗口尺寸变化时使用
+let brightness = 0
+
+const styleText = _ => (
+  Object.entries({
+    width: `${document.documentElement.clientWidth}px`,
+    height: `${document.documentElement.clientHeight}px`,
+    background: `rgba(0,0,0,${_ === undefined ? brightness : _})`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev), '')
+)
+
+const SEND_GET_BRIGHTNESS_SET_STYLE = ({
+  isSave, value
+}) => {
+  // isSave 为真时获取后台存储的值
+  if (isSave) {
+    Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
+      type: 'GET_BRIGHT_NESS'
+    })
+      .then(response => {
+        brightness = response.brightness
+        dom.setAttribute('style', styleText())
+      })
+  } else {
+    // isSave 为假时仅设置样式值
+    brightness = value
+    dom.setAttribute('style', styleText(value))
+  }
+}
+
+const SEND_SET_BRIGHTNESS = ({
+  value
+}) => {
+  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
+    type: 'SET_BRIGHT_NESS',
+    value
+  })
+    .then(_ => {
+      console.log('延后执行 SEND_SET_BRIGHTNESS')
+      brightness = value
+    })
+}
+
+SEND_GET_BRIGHTNESS_SET_STYLE({ isSave: true })
+
+// 先加载到页面上
+const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
+  class: '_box__',
+  style: styleText()
+})
+
+// 对 body 的临时引用
+let body = document.createElement('body')
+body.setAttribute('__board__', '__')
+document.documentElement.appendChild(body)
+body.appendChild(dom)
+body = null
+
+window.addEventListener('resize', _ => {
+  request !== null && cancelAnimationFrame(request)
+  // 强制 60 Hz
+  request = requestAnimationFrame(_ => {
+    dom.setAttribute('style', styleText())
+    request = null
+  })
+}, false)
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  SEND_GET_BRIGHTNESS_SET_STYLE,
+  SEND_SET_BRIGHTNESS
+});
+
+/***/ }),
+
+/***/ "./src/logic/brightness/main.js":
+/*!**************************************!*\
+  !*** ./src/logic/brightness/main.js ***!
+  \**************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_box */ "./src/logic/content/init_brightness_box.js");
-/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/content/build_main_btn.js");
+/* harmony import */ var _init_brightness_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_board */ "./src/logic/brightness/init_brightness_board.js");
+/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/brightness/build_main_btn.js");
 /* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
 
 
 
+
+let isMainBtnClick = false // 主按钮是否点击
+let requestOfMoveBar = null // 滑动条移动限频状态位
+let timeOfMoveBar = null // 滑动条延时通知后台状态位
+let saveYOfMoveBar = 0 // 内滑动条缓存
+let requestOfCanMove = null // 主按钮移动移动限频状态位
+let timeOfCanMove = null // 主按钮移动延时通知后台状态位
+let isSwitchBarClick = false // 亮度调节按钮是否点击
+let isCanMoveClick = false // 是否可移动状态位
+
+const setMainBtnLeftAndTop = (left, top) => _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].setAttribute('style',
+  Object.entries({
+    left: `${left}px`,
+    top: `${top}px`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
+)
+const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
+  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
+    type: 'SET_MAIN_BTN_LEFT_TOP',
+    left,
+    top
+  })
+    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
+}
 
 console.clear()
 
@@ -204,16 +305,9 @@ Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2_
 })
   .then(response => {
     const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"], null).height.replace(/\D/g, '')
-    const h = Math.floor(height * response.message)
+    const h = Math.floor(height * response.brightness)
     _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${h}px`
   })
-
-const setMainBtnLeftAndTop = (left, top) => _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].setAttribute('style',
-  Object.entries({
-    left: `${left}px`,
-    top: `${top}px`
-  }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
-)
 
 Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
   type: 'GET_MAIN_BTN_LEFT_TOP'
@@ -232,28 +326,6 @@ Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2_
     }
   })
 
-const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
-  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
-    type: 'SET_MAIN_BTN_LEFT_TOP',
-    left,
-    top
-  })
-    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
-}
-
-let isMainBtnClick = false // 主按钮是否点击
-
-let requestOfMoveBar = null // 滑动条移动限频状态位
-let timeOfMoveBar = null // 滑动条延时通知后台状态位
-let saveYOfMoveBar = 0 // 内滑动条缓存
-
-let requestOfCanMove = null // 主按钮移动移动限频状态位
-let timeOfCanMove = null // 主按钮移动延时通知后台状态位
-
-
-let isSwitchBarClick = false // 亮度调节按钮是否点击
-let isCanMoveClick = false // 是否可移动状态位
-
 // 事件监听器、事件绑定
 _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"].onmousemove = e => {
   e.stopPropagation()
@@ -268,20 +340,19 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"].onmousemove = e => {
       let value = `${e.offsetY / height}`.replace(/(\d)(\.\d)\d*$/g, '$1$2')
       // console.info(height, e.offsetY, saveYOfMoveBar, value)
       console.info('move')
-      _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: false, value })
+      _init_brightness_board__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_GET_BRIGHTNESS_SET_STYLE({ isSave: false, value })
       _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${e.offsetY}px`
       saveYOfMoveBar = e.offsetY
       // 延后通知后台
       timeOfMoveBar !== null && clearTimeout(timeOfMoveBar)
       timeOfMoveBar = setTimeout(_ => {
-        _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_SET_BRIGHT_NESS({ value })
+        _init_brightness_board__WEBPACK_IMPORTED_MODULE_0__["default"].SEND_SET_BRIGHTNESS({ value })
         timeOfMoveBar = null
       }, 5000)
     }
     requestOfMoveBar = null
   })
 }
-
 
 window.addEventListener('mousemove', e => {
   if (!isMainBtnClick || !isCanMoveClick) {
@@ -330,7 +401,6 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].onclick = e => {
     : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["canMove"].style.background = '#fff'
 }
 
-
 _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onclick = e => {
   e.stopPropagation()
   isMainBtnClick = !isMainBtnClick
@@ -338,98 +408,6 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onclick = e => {
     ? _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerBox"].style.display = 'flex'
     : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerBox"].style.display = 'none'
 }
-
-/***/ }),
-
-/***/ "./src/logic/content/init_brightness_box.js":
-/*!**************************************************!*\
-  !*** ./src/logic/content/init_brightness_box.js ***!
-  \**************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
-/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
-
-
-
-/**
- * 遮罩层初始化逻辑
- */
-let request = null
-const styleText = _ => (
-  Object.entries({
-    width: `${document.documentElement.clientWidth}px`,
-    height: `${document.documentElement.clientHeight}px`,
-    background: `rgba(0,0,0,${_ === undefined ? brightness : _})`
-  }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev), '')
-)
-// 缓存，以供窗口尺寸变化时使用
-let brightness = 0
-
-const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
-  isSave, value
-}) => {
-  // isSave 为真时获取后台存储的值
-  if (isSave) {
-    Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
-      type: 'GET_BRIGHT_NESS'
-    })
-      .then(response => {
-        console.log(response.message)
-        brightness = response.message
-        dom.setAttribute('style', styleText())
-      })
-  } else {
-    // isSave 为假时仅设置样式值
-    brightness = value
-    dom.setAttribute('style', styleText(value))
-  }
-}
-
-const SEND_SET_BRIGHT_NESS = ({
-  value
-}) => {
-  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
-    type: 'SET_BRIGHT_NESS',
-    value
-  })
-    .then(_ => {
-      console.log('延后执行 SEND_SET_BRIGHT_NESS')
-      brightness = value
-    })
-}
-
-SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
-
-// 先加载到页面上
-const dom = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', {
-  class: '_box__',
-  style: styleText()
-})
-
-// 对 body 的临时引用
-let body = document.createElement('body')
-body.setAttribute('__board__', '__')
-document.documentElement.appendChild(body)
-body.appendChild(dom)
-body = null
-
-window.addEventListener('resize', _ => {
-  request !== null && cancelAnimationFrame(request)
-  // 强制 60 Hz
-  request = requestAnimationFrame(_ => {
-    dom.setAttribute('style', styleText())
-    request = null
-  })
-}, false)
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  SEND_GET_BRIGHT_NESS_SET_STYLE,
-  SEND_SET_BRIGHT_NESS
-});
 
 /***/ }),
 
@@ -535,4 +513,4 @@ const isObj = _ => Object.prototype.toString.call(_).slice(8, -1) === 'Object'
 /***/ })
 
 /******/ });
-//# sourceMappingURL=content_script.js.map
+//# sourceMappingURL=brightness.js.map

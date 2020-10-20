@@ -1,6 +1,30 @@
-import ACTION from './init_brightness_box'
+import ACTION from './init_brightness_board'
 import mainBtn, { canMove, moveBar, innerMoveBar, switchBar, innerBox } from './build_main_btn'
 import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
+
+let isMainBtnClick = false // 主按钮是否点击
+let requestOfMoveBar = null // 滑动条移动限频状态位
+let timeOfMoveBar = null // 滑动条延时通知后台状态位
+let saveYOfMoveBar = 0 // 内滑动条缓存
+let requestOfCanMove = null // 主按钮移动移动限频状态位
+let timeOfCanMove = null // 主按钮移动延时通知后台状态位
+let isSwitchBarClick = false // 亮度调节按钮是否点击
+let isCanMoveClick = false // 是否可移动状态位
+
+const setMainBtnLeftAndTop = (left, top) => mainBtn.setAttribute('style',
+  Object.entries({
+    left: `${left}px`,
+    top: `${top}px`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
+)
+const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
+  sendMessage({
+    type: 'SET_MAIN_BTN_LEFT_TOP',
+    left,
+    top
+  })
+    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
+}
 
 console.clear()
 
@@ -9,16 +33,9 @@ sendMessage({
 })
   .then(response => {
     const height = +getComputedStyle(moveBar, null).height.replace(/\D/g, '')
-    const h = Math.floor(height * response.message)
+    const h = Math.floor(height * response.brightness)
     innerMoveBar.style.height = `${h}px`
   })
-
-const setMainBtnLeftAndTop = (left, top) => mainBtn.setAttribute('style',
-  Object.entries({
-    left: `${left}px`,
-    top: `${top}px`
-  }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
-)
 
 sendMessage({
   type: 'GET_MAIN_BTN_LEFT_TOP'
@@ -37,28 +54,6 @@ sendMessage({
     }
   })
 
-const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
-  sendMessage({
-    type: 'SET_MAIN_BTN_LEFT_TOP',
-    left,
-    top
-  })
-    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
-}
-
-let isMainBtnClick = false // 主按钮是否点击
-
-let requestOfMoveBar = null // 滑动条移动限频状态位
-let timeOfMoveBar = null // 滑动条延时通知后台状态位
-let saveYOfMoveBar = 0 // 内滑动条缓存
-
-let requestOfCanMove = null // 主按钮移动移动限频状态位
-let timeOfCanMove = null // 主按钮移动延时通知后台状态位
-
-
-let isSwitchBarClick = false // 亮度调节按钮是否点击
-let isCanMoveClick = false // 是否可移动状态位
-
 // 事件监听器、事件绑定
 moveBar.onmousemove = e => {
   e.stopPropagation()
@@ -73,20 +68,19 @@ moveBar.onmousemove = e => {
       let value = `${e.offsetY / height}`.replace(/(\d)(\.\d)\d*$/g, '$1$2')
       // console.info(height, e.offsetY, saveYOfMoveBar, value)
       console.info('move')
-      ACTION.SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: false, value })
+      ACTION.SEND_GET_BRIGHTNESS_SET_STYLE({ isSave: false, value })
       innerMoveBar.style.height = `${e.offsetY}px`
       saveYOfMoveBar = e.offsetY
       // 延后通知后台
       timeOfMoveBar !== null && clearTimeout(timeOfMoveBar)
       timeOfMoveBar = setTimeout(_ => {
-        ACTION.SEND_SET_BRIGHT_NESS({ value })
+        ACTION.SEND_SET_BRIGHTNESS({ value })
         timeOfMoveBar = null
       }, 5000)
     }
     requestOfMoveBar = null
   })
 }
-
 
 window.addEventListener('mousemove', e => {
   if (!isMainBtnClick || !isCanMoveClick) {
@@ -134,7 +128,6 @@ canMove.onclick = e => {
     ? canMove.style.background = '#90EE90'
     : canMove.style.background = '#fff'
 }
-
 
 mainBtn.onclick = e => {
   e.stopPropagation()

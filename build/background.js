@@ -100,15 +100,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/bg/message_listener */ "./src/logic/bg/message_listener.js");
 /* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
 
-// ----------
 
 
 
 
-// With background scripts you can communicate with popup
-// and contentScript files.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_pages
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   Object(_logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__["handler"])(request, sender, sendResponse)
@@ -157,7 +152,7 @@ const handler = (request, sender, sendResponse) => {
   switch (request.type) {
     case 'GET_BRIGHT_NESS':
       return sendResponse({
-        message: localStorage.getItem('__bright_ness__'),
+        brightness: localStorage.getItem('__bright_ness__'),
       })
     case 'SET_BRIGHT_NESS':
       {

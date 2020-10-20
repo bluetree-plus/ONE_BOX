@@ -4,7 +4,11 @@ import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
 /**
  * 遮罩层初始化逻辑
  */
+
 let request = null
+// 缓存，以供窗口尺寸变化时使用
+let brightness = 0
+
 const styleText = _ => (
   Object.entries({
     width: `${document.documentElement.clientWidth}px`,
@@ -12,10 +16,8 @@ const styleText = _ => (
     background: `rgba(0,0,0,${_ === undefined ? brightness : _})`
   }).reduce((prev, [k, v]) => (prev += `${k}:${v}!important;`, prev), '')
 )
-// 缓存，以供窗口尺寸变化时使用
-let brightness = 0
 
-const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
+const SEND_GET_BRIGHTNESS_SET_STYLE = ({
   isSave, value
 }) => {
   // isSave 为真时获取后台存储的值
@@ -24,8 +26,7 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
       type: 'GET_BRIGHT_NESS'
     })
       .then(response => {
-        console.log(response.message)
-        brightness = response.message
+        brightness = response.brightness
         dom.setAttribute('style', styleText())
       })
   } else {
@@ -35,7 +36,7 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
   }
 }
 
-const SEND_SET_BRIGHT_NESS = ({
+const SEND_SET_BRIGHTNESS = ({
   value
 }) => {
   sendMessage({
@@ -43,12 +44,12 @@ const SEND_SET_BRIGHT_NESS = ({
     value
   })
     .then(_ => {
-      console.log('延后执行 SEND_SET_BRIGHT_NESS')
+      console.log('延后执行 SEND_SET_BRIGHTNESS')
       brightness = value
     })
 }
 
-SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
+SEND_GET_BRIGHTNESS_SET_STYLE({ isSave: true })
 
 // 先加载到页面上
 const dom = h('div', {
@@ -73,6 +74,6 @@ window.addEventListener('resize', _ => {
 }, false)
 
 export default {
-  SEND_GET_BRIGHT_NESS_SET_STYLE,
-  SEND_SET_BRIGHT_NESS
+  SEND_GET_BRIGHTNESS_SET_STYLE,
+  SEND_SET_BRIGHTNESS
 }

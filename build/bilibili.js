@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/other_functions/bilibili/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/other_functions/bilibili/main.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/other_functions/bilibili/index.js":
-/*!***********************************************!*\
-  !*** ./src/other_functions/bilibili/index.js ***!
-  \***********************************************/
+/***/ "./src/other_functions/bilibili/main.js":
+/*!**********************************************!*\
+  !*** ./src/other_functions/bilibili/main.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
