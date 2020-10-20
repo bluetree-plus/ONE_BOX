@@ -11,6 +11,35 @@ chrome.runtime.sendMessage({
   innerMoveBar.style.height = `${h}px`
 })
 
+const setMainBtnLeftAndTop = (left, top) => mainBtn.setAttribute('style',
+  Object.entries({
+    left: `${left}px`,
+    top: `${top}px`
+  }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
+)
+
+chrome.runtime.sendMessage({ type: 'GET_MAIN_BTN_LEFT_TOP' }, ({ left, top }) => {
+  // 当前屏幕尺寸大于后台存储的left，top值时，将回归初始值，并后台存储
+  // 否则依旧使用当前 left , top
+  if (
+    ((+left) > document.documentElement.clientWidth - 25 - 10 - 25) ||
+    ((+top) > document.documentElement.clientHeight - 10 - 25)
+  ) {
+    setMainBtnLeftAndTop(0, 100)
+    SEND_SET_MAIN_BTN_LEFT_TOP(0, 100)
+  } else {
+    setMainBtnLeftAndTop(left, top)
+  }
+})
+
+const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
+  chrome.runtime.sendMessage({
+    type: 'SET_MAIN_BTN_LEFT_TOP',
+    left,
+    top
+  }, _ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
+}
+
 let isMainBtnEnter = false
 
 let requestOfMoveBar = null // 滑动条移动限频状态位
@@ -19,8 +48,6 @@ let saveYOfMoveBar = 0 // 内滑动条缓存
 
 let requestOfCanMove = null // 主按钮移动移动限频状态位
 let timeOfCanMove = null // 主按钮移动延时通知后台状态位
-let saveYOfCanMove = 0 // 主按钮横轴缓存
-let saveXOfCanMove = 0 // 主按钮纵轴缓存
 
 
 let isSwitchBarClick = false
@@ -61,10 +88,9 @@ window.addEventListener('mousemove', e => {
   }
   requestOfCanMove !== null && cancelAnimationFrame(requestOfCanMove)
   requestOfCanMove = requestAnimationFrame(_ => {
-    // 左上角 (0, 0)
-    // 右上角 (document.documentElement.clientWidth - 25 - 10 - 25, 0)
-    // 左下角 (0, document.documentElement.clientHeight - 10 -25)
-    // 右下角 (document.documentElement.clientWidth - 25 - 10 - 25, document.documentElement.clientHeight - 10 -25)
+    // left [0, document.documentElement.clientWidth - 25 - 10 - 25]
+    // top [0, document.documentElement.clientHeight - 10 - 25]
+
     let left = Math.floor(e.clientX - 12.5 - 10 - 25)
     let top = Math.floor(e.clientY - 12.5)
     if (left > document.documentElement.clientWidth - 25 - 10 - 25 || left < 0) {
@@ -73,16 +99,15 @@ window.addEventListener('mousemove', e => {
     if (top > document.documentElement.clientHeight - 10 - 25 || top < 0) {
       return
     }
-    mainBtn.setAttribute('style',
-      Object.entries({
-        left: `${left}px`,
-        top: `${top}px`
-      }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
-    )
-    saveXOfCanMove = left
-    saveYOfCanMove = top
+    setMainBtnLeftAndTop(left, top)
     // 延后通知后台
-    console.info('滑稽')
+    timeOfCanMove !== null && clearTimeout(timeOfCanMove)
+    timeOfCanMove = setTimeout(_ => {
+      SEND_SET_MAIN_BTN_LEFT_TOP(left, top)
+      timeOfCanMove = null
+    }, 5000)
+    console.info('move main btn')
+    requestOfCanMove = null
   })
 }, false)
 
@@ -102,7 +127,6 @@ canMove.onclick = e => {
   isCanMoveClick
     ? canMove.style.background = '#90EE90'
     : canMove.style.background = '#fff'
-  console.info('滑稽 click', saveXOfCanMove, saveYOfCanMove)
 }
 
 mainBtn.onmouseenter = _ => (innerBox.style.display = 'flex', isMainBtnEnter = true)

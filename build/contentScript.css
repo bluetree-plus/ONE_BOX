@@ -18,13 +18,12 @@ body[__board__='__'] {
 }
 
 .main__btn__ {
-  cursor: pointer;
   /* 很重要的样式问题 */
   box-sizing: content-box;
   z-index: 9999999!important;
   position: fixed;
-  left: 300px;
-  top: 500px;
+  left: 0;
+  top: 100px;
   width: 25px;
   height: 25px;
   border-radius: 25px;

@@ -127,9 +127,15 @@ console.info(_utils_http__WEBPACK_IMPORTED_MODULE_2__["default"])
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-const ness = localStorage.getItem('__bright_ness__')
-if (ness === null) {
+
+if (localStorage.getItem('__bright_ness__') === null) {
   localStorage.setItem('__bright_ness__', '0')
+}
+if (localStorage.getItem('__main_btn_left__') === null) {
+  localStorage.setItem('__main_btn_left__', '0')
+}
+if (localStorage.getItem('__main_btn_top__') === null) {
+  localStorage.setItem('__main_btn_top__', '100')
 }
 
 /***/ }),
@@ -156,6 +162,18 @@ const handler = (request, sender, sendResponse) => {
     case 'SET_BRIGHT_NESS':
       {
         localStorage.setItem('__bright_ness__', request.value)
+        return sendResponse()
+      }
+    case 'GET_MAIN_BTN_LEFT_TOP':
+      return sendResponse({
+        left: localStorage.getItem('__main_btn_left__'),
+        top: localStorage.getItem('__main_btn_top__'),
+      })
+    case 'SET_MAIN_BTN_LEFT_TOP':
+      {
+        const { left, top } = request
+        localStorage.setItem('__main_btn_left__', `${left}`)
+        localStorage.setItem('__main_btn_top__', `${top}`)
         return sendResponse()
       }
     default: ;
