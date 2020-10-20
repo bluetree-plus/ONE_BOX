@@ -1,4 +1,5 @@
 import { h } from '../../utils/create_element'
+import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
 
 /**
  * 遮罩层初始化逻辑
@@ -19,13 +20,14 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
 }) => {
   // isSave 为真时获取后台存储的值
   if (isSave) {
-    chrome.runtime.sendMessage({
+    sendMessage({
       type: 'GET_BRIGHT_NESS'
-    }, response => {
-      console.log(response.message)
-      brightness = response.message
-      dom.setAttribute('style', styleText())
     })
+      .then(response => {
+        console.log(response.message)
+        brightness = response.message
+        dom.setAttribute('style', styleText())
+      })
   } else {
     // isSave 为假时仅设置样式值
     brightness = value
@@ -36,13 +38,14 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
 const SEND_SET_BRIGHT_NESS = ({
   value
 }) => {
-  chrome.runtime.sendMessage({
+  sendMessage({
     type: 'SET_BRIGHT_NESS',
     value
-  }, _ => {
-    console.log('延后执行 SEND_SET_BRIGHT_NESS')
-    brightness = value
   })
+    .then(_ => {
+      console.log('延后执行 SEND_SET_BRIGHT_NESS')
+      brightness = value
+    })
 }
 
 SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })

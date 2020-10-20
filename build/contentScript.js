@@ -163,8 +163,7 @@ const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])(
         Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'move_bar' }, [
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
         ])
-      ]),
-      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_right' })
+      ])
     ])
   ]
 )
@@ -193,18 +192,21 @@ const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _init_brightness_box__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_box */ "./src/logic/content/init_brightness_box.js");
 /* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/content/build_main_btn.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
+
 
 
 
 console.clear()
 
-chrome.runtime.sendMessage({
+Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
   type: 'GET_BRIGHT_NESS'
-}, response => {
-  const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"], null).height.replace(/\D/g, '')
-  const h = Math.floor(height * response.message)
-  _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${h}px`
 })
+  .then(response => {
+    const height = +getComputedStyle(_build_main_btn__WEBPACK_IMPORTED_MODULE_1__["moveBar"], null).height.replace(/\D/g, '')
+    const h = Math.floor(height * response.message)
+    _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerMoveBar"].style.height = `${h}px`
+  })
 
 const setMainBtnLeftAndTop = (left, top) => _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].setAttribute('style',
   Object.entries({
@@ -213,26 +215,30 @@ const setMainBtnLeftAndTop = (left, top) => _build_main_btn__WEBPACK_IMPORTED_MO
   }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
 )
 
-chrome.runtime.sendMessage({ type: 'GET_MAIN_BTN_LEFT_TOP' }, ({ left, top }) => {
-  // 当前屏幕尺寸大于后台存储的left，top值时，将回归初始值，并后台存储
-  // 否则依旧使用当前 left , top
-  if (
-    ((+left) > document.documentElement.clientWidth - 25 - 10 - 25) ||
-    ((+top) > document.documentElement.clientHeight - 10 - 25)
-  ) {
-    setMainBtnLeftAndTop(0, 100)
-    SEND_SET_MAIN_BTN_LEFT_TOP(0, 100)
-  } else {
-    setMainBtnLeftAndTop(left, top)
-  }
+Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
+  type: 'GET_MAIN_BTN_LEFT_TOP'
 })
+  .then(({ left, top }) => {
+    // 当前屏幕尺寸大于后台存储的left，top值时，将回归初始值，并后台存储
+    // 否则依旧使用当前 left , top
+    if (
+      ((+left) > document.documentElement.clientWidth - 25 - 10 - 25) ||
+      ((+top) > document.documentElement.clientHeight - 10 - 25)
+    ) {
+      setMainBtnLeftAndTop(0, 100)
+      SEND_SET_MAIN_BTN_LEFT_TOP(0, 100)
+    } else {
+      setMainBtnLeftAndTop(left, top)
+    }
+  })
 
 const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
-  chrome.runtime.sendMessage({
+  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__["sendMessage"])({
     type: 'SET_MAIN_BTN_LEFT_TOP',
     left,
     top
-  }, _ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
+  })
+    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
 }
 
 let isMainBtnClick = false // 主按钮是否点击
@@ -345,6 +351,8 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onclick = e => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
+
 
 
 /**
@@ -366,13 +374,14 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
 }) => {
   // isSave 为真时获取后台存储的值
   if (isSave) {
-    chrome.runtime.sendMessage({
+    Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
       type: 'GET_BRIGHT_NESS'
-    }, response => {
-      console.log(response.message)
-      brightness = response.message
-      dom.setAttribute('style', styleText())
     })
+      .then(response => {
+        console.log(response.message)
+        brightness = response.message
+        dom.setAttribute('style', styleText())
+      })
   } else {
     // isSave 为假时仅设置样式值
     brightness = value
@@ -383,13 +392,14 @@ const SEND_GET_BRIGHT_NESS_SET_STYLE = ({
 const SEND_SET_BRIGHT_NESS = ({
   value
 }) => {
-  chrome.runtime.sendMessage({
+  Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__["sendMessage"])({
     type: 'SET_BRIGHT_NESS',
     value
-  }, _ => {
-    console.log('延后执行 SEND_SET_BRIGHT_NESS')
-    brightness = value
   })
+    .then(_ => {
+      console.log('延后执行 SEND_SET_BRIGHT_NESS')
+      brightness = value
+    })
 }
 
 SEND_GET_BRIGHT_NESS_SET_STYLE({ isSave: true })
@@ -420,6 +430,22 @@ window.addEventListener('resize', _ => {
   SEND_GET_BRIGHT_NESS_SET_STYLE,
   SEND_SET_BRIGHT_NESS
 });
+
+/***/ }),
+
+/***/ "./src/utils/chrome_api/chrome_runtime_send_message.js":
+/*!*************************************************************!*\
+  !*** ./src/utils/chrome_api/chrome_runtime_send_message.js ***!
+  \*************************************************************/
+/*! exports provided: sendMessage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendMessage", function() { return sendMessage; });
+const sendMessage = sendData => new Promise(
+  resolve => chrome.runtime.sendMessage(sendData, response => resolve(response))
+)
 
 /***/ }),
 

@@ -12,8 +12,7 @@ const mainBtn = h('div', { class: 'main__btn__' },
         h('div', { class: 'move_bar' }, [
           h('div', { class: 'inner_move_bar' })
         ])
-      ]),
-      h('div', { class: 'in_the_inner_box_right' })
+      ])
     ])
   ]
 )

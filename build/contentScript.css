@@ -36,14 +36,13 @@ body[__board__='__'] {
   /* 很重要的样式问题 */
   box-sizing: content-box;
   border-radius: 5px;
-  border-bottom-left-radius: 0;
   padding: 10px;
   margin-top: -485px;
   margin-left: 25px;
   user-select: none;
   background: rgba(0, 0, 0, 0.8);
   position: relative;
-  width: 500px;
+  width: 25px;
   height: 500px;
   /* display: flex */
   justify-content: space-between;
@@ -78,21 +77,14 @@ body[__board__='__'] {
   bottom: 10px;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_left, .main__btn__ .inner_box .in_the_inner_box_right {
+.main__btn__ .inner_box .in_the_inner_box_left {
   height: 100%;
   /* 很重要的样式问题 */
   box-sizing: content-box;
-}
-
-.main__btn__ .inner_box .in_the_inner_box_left {
   flex-basis: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.main__btn__ .inner_box .in_the_inner_box_right {
-  flex: 1 0;
 }
 
 .main__btn__ .inner_box .in_the_inner_box_left .move_bar {

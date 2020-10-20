@@ -1,15 +1,17 @@
 import ACTION from './init_brightness_box'
 import mainBtn, { canMove, moveBar, innerMoveBar, switchBar, innerBox } from './build_main_btn'
+import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
 
 console.clear()
 
-chrome.runtime.sendMessage({
+sendMessage({
   type: 'GET_BRIGHT_NESS'
-}, response => {
-  const height = +getComputedStyle(moveBar, null).height.replace(/\D/g, '')
-  const h = Math.floor(height * response.message)
-  innerMoveBar.style.height = `${h}px`
 })
+  .then(response => {
+    const height = +getComputedStyle(moveBar, null).height.replace(/\D/g, '')
+    const h = Math.floor(height * response.message)
+    innerMoveBar.style.height = `${h}px`
+  })
 
 const setMainBtnLeftAndTop = (left, top) => mainBtn.setAttribute('style',
   Object.entries({
@@ -18,26 +20,30 @@ const setMainBtnLeftAndTop = (left, top) => mainBtn.setAttribute('style',
   }).reduce((prev, [k, v]) => (prev += `${k}:${v};`, prev), '')
 )
 
-chrome.runtime.sendMessage({ type: 'GET_MAIN_BTN_LEFT_TOP' }, ({ left, top }) => {
-  // 当前屏幕尺寸大于后台存储的left，top值时，将回归初始值，并后台存储
-  // 否则依旧使用当前 left , top
-  if (
-    ((+left) > document.documentElement.clientWidth - 25 - 10 - 25) ||
-    ((+top) > document.documentElement.clientHeight - 10 - 25)
-  ) {
-    setMainBtnLeftAndTop(0, 100)
-    SEND_SET_MAIN_BTN_LEFT_TOP(0, 100)
-  } else {
-    setMainBtnLeftAndTop(left, top)
-  }
+sendMessage({
+  type: 'GET_MAIN_BTN_LEFT_TOP'
 })
+  .then(({ left, top }) => {
+    // 当前屏幕尺寸大于后台存储的left，top值时，将回归初始值，并后台存储
+    // 否则依旧使用当前 left , top
+    if (
+      ((+left) > document.documentElement.clientWidth - 25 - 10 - 25) ||
+      ((+top) > document.documentElement.clientHeight - 10 - 25)
+    ) {
+      setMainBtnLeftAndTop(0, 100)
+      SEND_SET_MAIN_BTN_LEFT_TOP(0, 100)
+    } else {
+      setMainBtnLeftAndTop(left, top)
+    }
+  })
 
 const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
-  chrome.runtime.sendMessage({
+  sendMessage({
     type: 'SET_MAIN_BTN_LEFT_TOP',
     left,
     top
-  }, _ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
+  })
+    .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
 }
 
 let isMainBtnClick = false // 主按钮是否点击
