@@ -22,6 +22,10 @@
 >1. download 源码 zip
 >2. 打开 Chrome 浏览器的开发者模式，加载已解压的扩展程序，解压源码 zip 包，选择根目录下的 build 文件夹即可
 
+## demo
+
+>![avatar](./demo/demo.png)
+
 ## other
 
 - 该插件会不断更新，加入更多的功能，如果您喜欢的话，请点个 star ，您的支持是我开发的动力

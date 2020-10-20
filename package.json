@@ -1,7 +1,7 @@
 {
   "name": "one_box",
-  "version": "0.0.0",
-  "description": "My Chrome Extension",
+  "version": "0.0.1",
+  "description": "a Chrome Extension",
   "private": true,
   "scripts": {
     "watch": "webpack --mode=development --watch --config config/webpack.config.js",
