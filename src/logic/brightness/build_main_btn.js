@@ -17,7 +17,7 @@ const mainBtn = h('div', { class: 'main__btn__' },
   ]
 )
 
-document.querySelector('body[__board__="__"]').appendChild(mainBtn)
+document.querySelector('one_box[__board__="__"]').appendChild(mainBtn)
 
 export default mainBtn
 export const innerBox = document.querySelector('.main__btn__ .inner_box')

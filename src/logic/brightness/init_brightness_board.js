@@ -57,12 +57,12 @@ const dom = h('div', {
   style: styleText()
 })
 
-// 对 body 的临时引用
-let body = document.createElement('body')
-body.setAttribute('__board__', '__')
-document.documentElement.appendChild(body)
-body.appendChild(dom)
-body = null
+// 自定义标签，隔绝网页脚本操作，以防造成样式bug
+let one_box = document.createElement('one_box')
+one_box.setAttribute('__board__', '__')
+document.documentElement.appendChild(one_box)
+one_box.appendChild(dom)
+one_box = null
 
 window.addEventListener('resize', _ => {
   request !== null && cancelAnimationFrame(request)
