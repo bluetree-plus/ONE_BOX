@@ -1,3 +1,5 @@
+// 先后顺序
+import './brightness.css'
 import ACTION from './init_brightness_board'
 import mainBtn, { canMove, moveBar, innerMoveBar, switchBar, innerBox } from './build_main_btn'
 import { sendMessage } from '../utils/chrome_api/chrome_runtime_send_message'
