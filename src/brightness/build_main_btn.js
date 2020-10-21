@@ -1,4 +1,4 @@
-import { h } from '../../utils/create_element'
+import { h } from '../utils/create_element'
 /**
  * 构建主按钮
  */

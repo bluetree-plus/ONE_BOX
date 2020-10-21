@@ -95,58 +95,55 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _logic_bg_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logic/bg/init */ "./src/logic/bg/init.js");
-/* harmony import */ var _logic_bg_init__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_logic_bg_init__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/bg/message_listener */ "./src/logic/bg/message_listener.js");
-/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
+/* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bg/init */ "./src/bg/init.js");
+/* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bg_init__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _bg_for_brightness__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bg/for_brightness */ "./src/bg/for_brightness.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_onmessage_addListener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_onmessage_addListener */ "./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js");
+/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
 
 
 
 
 
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  Object(_logic_bg_message_listener__WEBPACK_IMPORTED_MODULE_1__["handler"])(request, sender, sendResponse)
-})
+
+Object(_utils_chrome_api_chrome_runtime_onmessage_addListener__WEBPACK_IMPORTED_MODULE_2__["addListener"])(
+  [
+    _bg_for_brightness__WEBPACK_IMPORTED_MODULE_1__["forBrightnessHandler"]
+  ]
+)
 
 // 请求可以跨域
-console.info(_utils_http__WEBPACK_IMPORTED_MODULE_2__["default"])
+console.info(_utils_http__WEBPACK_IMPORTED_MODULE_3__["default"])
+
+// $http.get({
+//   url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
+//   data: {
+//     limti: 100
+//   }
+// })
+//   .then(result => {
+//     console.info(result)
+//   })
+//   .catch(error => {
+//     console.info(error)
+//   })
 
 
 /***/ }),
 
-/***/ "./src/logic/bg/init.js":
-/*!******************************!*\
-  !*** ./src/logic/bg/init.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-if (localStorage.getItem('__bright_ness__') === null) {
-  localStorage.setItem('__bright_ness__', '0')
-}
-if (localStorage.getItem('__main_btn_left__') === null) {
-  localStorage.setItem('__main_btn_left__', '0')
-}
-if (localStorage.getItem('__main_btn_top__') === null) {
-  localStorage.setItem('__main_btn_top__', '100')
-}
-
-/***/ }),
-
-/***/ "./src/logic/bg/message_listener.js":
-/*!******************************************!*\
-  !*** ./src/logic/bg/message_listener.js ***!
-  \******************************************/
-/*! exports provided: handler */
+/***/ "./src/bg/for_brightness.js":
+/*!**********************************!*\
+  !*** ./src/bg/for_brightness.js ***!
+  \**********************************/
+/*! exports provided: forBrightnessHandler */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handler", function() { return handler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forBrightnessHandler", function() { return forBrightnessHandler; });
 
-const handler = (request, sender, sendResponse) => {
+const forBrightnessHandler = (request, sender, sendResponse) => {
   console.info(request, sender, sendResponse)
 
   switch (request.type) {
@@ -177,6 +174,26 @@ const handler = (request, sender, sendResponse) => {
 
 /***/ }),
 
+/***/ "./src/bg/init.js":
+/*!************************!*\
+  !*** ./src/bg/init.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+if (localStorage.getItem('__bright_ness__') === null) {
+  localStorage.setItem('__bright_ness__', '0')
+}
+if (localStorage.getItem('__main_btn_left__') === null) {
+  localStorage.setItem('__main_btn_left__', '0')
+}
+if (localStorage.getItem('__main_btn_top__') === null) {
+  localStorage.setItem('__main_btn_top__', '100')
+}
+
+/***/ }),
+
 /***/ "./src/utils/base_time.js":
 /*!********************************!*\
   !*** ./src/utils/base_time.js ***!
@@ -188,6 +205,24 @@ const handler = (request, sender, sendResponse) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "baseTime", function() { return baseTime; });
 const baseTime = 5 * 60 * 1000
+
+/***/ }),
+
+/***/ "./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js":
+/*!**********************************************************************!*\
+  !*** ./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js ***!
+  \**********************************************************************/
+/*! exports provided: addListener */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addListener", function() { return addListener; });
+const addListener = callbacks => (
+  chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => callbacks.forEach(_ => _(request, sender, sendResponse))
+  )
+)
 
 /***/ }),
 

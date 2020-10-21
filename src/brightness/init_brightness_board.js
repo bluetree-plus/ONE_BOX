@@ -1,5 +1,5 @@
-import { h } from '../../utils/create_element'
-import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
+import { h } from '../utils/create_element'
+import { sendMessage } from '../utils/chrome_api/chrome_runtime_send_message'
 
 /**
  * 遮罩层初始化逻辑

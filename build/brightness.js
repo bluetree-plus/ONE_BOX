@@ -86,17 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/brightness.css":
-/*!****************************!*\
-  !*** ./src/brightness.css ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-
 /***/ "./src/brightness.js":
 /*!***************************!*\
   !*** ./src/brightness.js ***!
@@ -106,9 +95,9 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _brightness_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brightness.css */ "./src/brightness.css");
-/* harmony import */ var _brightness_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_brightness_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _logic_brightness_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logic/brightness/main */ "./src/logic/brightness/main.js");
+/* harmony import */ var _style_brightness_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style/brightness.css */ "./src/style/brightness.css");
+/* harmony import */ var _style_brightness_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_brightness_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _brightness_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./brightness/main */ "./src/brightness/main.js");
 
 
 
@@ -118,10 +107,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/logic/brightness/build_main_btn.js":
-/*!************************************************!*\
-  !*** ./src/logic/brightness/build_main_btn.js ***!
-  \************************************************/
+/***/ "./src/brightness/build_main_btn.js":
+/*!******************************************!*\
+  !*** ./src/brightness/build_main_btn.js ***!
+  \******************************************/
 /*! exports provided: default, innerBox, moveBar, innerMoveBar, switchBar, canMove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -132,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "innerMoveBar", function() { return innerMoveBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchBar", function() { return switchBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canMove", function() { return canMove; });
-/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
+/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/create_element */ "./src/utils/create_element.js");
 
 /**
  * 构建主按钮
@@ -165,17 +154,17 @@ const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
 
 /***/ }),
 
-/***/ "./src/logic/brightness/init_brightness_board.js":
-/*!*******************************************************!*\
-  !*** ./src/logic/brightness/init_brightness_board.js ***!
-  \*******************************************************/
+/***/ "./src/brightness/init_brightness_board.js":
+/*!*************************************************!*\
+  !*** ./src/brightness/init_brightness_board.js ***!
+  \*************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/create_element */ "./src/utils/create_element.js");
-/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
+/* harmony import */ var _utils_create_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/create_element */ "./src/utils/create_element.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
 
 
 
@@ -258,18 +247,18 @@ window.addEventListener('resize', _ => {
 
 /***/ }),
 
-/***/ "./src/logic/brightness/main.js":
-/*!**************************************!*\
-  !*** ./src/logic/brightness/main.js ***!
-  \**************************************/
+/***/ "./src/brightness/main.js":
+/*!********************************!*\
+  !*** ./src/brightness/main.js ***!
+  \********************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _init_brightness_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_board */ "./src/logic/brightness/init_brightness_board.js");
-/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/logic/brightness/build_main_btn.js");
-/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
+/* harmony import */ var _init_brightness_board__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init_brightness_board */ "./src/brightness/init_brightness_board.js");
+/* harmony import */ var _build_main_btn__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./build_main_btn */ "./src/brightness/build_main_btn.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/chrome_api/chrome_runtime_send_message */ "./src/utils/chrome_api/chrome_runtime_send_message.js");
 
 
 
@@ -410,6 +399,17 @@ _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["default"].onclick = e => {
     ? _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerBox"].style.display = 'flex'
     : _build_main_btn__WEBPACK_IMPORTED_MODULE_1__["innerBox"].style.display = 'none'
 }
+
+/***/ }),
+
+/***/ "./src/style/brightness.css":
+/*!**********************************!*\
+  !*** ./src/style/brightness.css ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 

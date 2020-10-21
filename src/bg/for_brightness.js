@@ -1,5 +1,5 @@
 
-export const handler = (request, sender, sendResponse) => {
+export const forBrightnessHandler = (request, sender, sendResponse) => {
   console.info(request, sender, sendResponse)
 
   switch (request.type) {

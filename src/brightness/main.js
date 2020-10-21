@@ -1,6 +1,6 @@
 import ACTION from './init_brightness_board'
 import mainBtn, { canMove, moveBar, innerMoveBar, switchBar, innerBox } from './build_main_btn'
-import { sendMessage } from '../../utils/chrome_api/chrome_runtime_send_message'
+import { sendMessage } from '../utils/chrome_api/chrome_runtime_send_message'
 
 let isMainBtnClick = false // 主按钮是否点击
 let requestOfMoveBar = null // 滑动条移动限频状态位
