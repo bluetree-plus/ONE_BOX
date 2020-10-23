@@ -9,7 +9,7 @@
   display: block!important;
 }
 
-._box__ {
+[__board__='__'] ._box__ {
   position: fixed!important;
   top: 0!important;
   left: 0!important;
@@ -20,7 +20,7 @@
   display: block!important;
 }
 
-.main__btn__ {
+[__board__='__'] .main__btn__ {
   /* 很重要的样式问题 */
   box-sizing: content-box;
   z-index: 9999999!important;
@@ -35,7 +35,7 @@
   cursor: pointer;
 }
 
-.main__btn__ .inner_box {
+[__board__='__'] .main__btn__ .inner_box {
   /* 很重要的样式问题 */
   box-sizing: content-box;
   border-radius: 5px;
@@ -54,7 +54,7 @@
   cursor: initial;
 }
 
-.main__btn__ .inner_box .switch, .main__btn__ .inner_box .can_move {
+[__board__='__'] .main__btn__ .inner_box .switch, .main__btn__ .inner_box .can_move {
   /* 很重要的样式问题 */
   box-sizing: content-box;
   position: absolute;
@@ -72,40 +72,40 @@
   font-weight: bold;
 }
 
-.main__btn__ .inner_box .switch {
+[__board__='__'] .main__btn__ .inner_box .switch {
   top: 10px;
 }
 
-.main__btn__ .inner_box .can_move {
+[__board__='__'] .main__btn__ .inner_box .can_move {
   bottom: 10px;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_left, .main__btn__ .inner_box .in_the_inner_box_middle, .main__btn__ .inner_box .in_the_inner_box_right {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_left, .main__btn__ .inner_box .in_the_inner_box_middle, .main__btn__ .inner_box .in_the_inner_box_right {
   height: 100%;
   /* 很重要的样式问题 */
   box-sizing: content-box;
   border-radius: 5px;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_left {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_left {
   flex-basis: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_middle {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_middle {
   flex-basis: 500px;
   border: 1px solid #fff;
   box-sizing: border-box;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_right {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_right {
   flex-basis: 25px;
   background: #fff;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_left .move_bar {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_left .move_bar {
   /* move_bar 高度固定 */
   height: 400px;
   width: 100%;
@@ -116,7 +116,7 @@
   border-radius: 5px;
 }
 
-.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar {
+[__board__='__'] .main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar {
   /* 很重要的样式问题 */
   box-sizing: content-box;
   width: 100%;

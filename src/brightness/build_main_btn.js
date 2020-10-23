@@ -19,12 +19,12 @@ const mainBtn = h('div', { class: 'main__btn__' },
   ]
 )
 
-document.querySelector('one_box[__board__="__"]').appendChild(mainBtn)
+document.querySelector('[__board__="__"]').appendChild(mainBtn)
 
 export default mainBtn
-export const innerBox = document.querySelector('.main__btn__ .inner_box')
-export const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
-export const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
-export const switchBar = document.querySelector('.main__btn__ .inner_box .switch')
-export const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
+export const innerBox = document.querySelector('[__board__="__"] .main__btn__ .inner_box')
+export const moveBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .in_the_inner_box_left .move_bar')
+export const innerMoveBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
+export const switchBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .switch')
+export const canMove = document.querySelector('[__board__="__"] .main__btn__ .inner_box .can_move')
 

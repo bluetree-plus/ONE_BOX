@@ -18,13 +18,13 @@ export const core = ({
     }
     // console.info(typeof xhr.getAllResponseHeaders())
     xhr.status === 200
-      ? resolve(xhr.response)
-      : resolve(xhr.status)
+      ? resolve({ data: xhr.response })
+      : reject({ data: '[-1]', otherMes: xhr.status })
   }
   header && Object.entries(header).forEach(([k, v]) => k.toLowerCase() !== 'content-type' && xhr.setRequestHeader(k, v))
   xhr.setRequestHeader('content-type', type)
   xhr.responseType = responseType || 'json'
   xhr.timeout = time || baseTime
-  xhr.onerror = _ => reject(_)
+  xhr.onerror = _ => reject({ data: '[-1]', otherMes: _ })
   xhr.send(data)
 })

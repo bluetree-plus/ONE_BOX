@@ -133,14 +133,14 @@ const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])(
   ]
 )
 
-document.querySelector('one_box[__board__="__"]').appendChild(mainBtn)
+document.querySelector('[__board__="__"]').appendChild(mainBtn)
 
 /* harmony default export */ __webpack_exports__["default"] = (mainBtn);
-const innerBox = document.querySelector('.main__btn__ .inner_box')
-const moveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar')
-const innerMoveBar = document.querySelector('.main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
-const switchBar = document.querySelector('.main__btn__ .inner_box .switch')
-const canMove = document.querySelector('.main__btn__ .inner_box .can_move')
+const innerBox = document.querySelector('[__board__="__"] .main__btn__ .inner_box')
+const moveBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .in_the_inner_box_left .move_bar')
+const innerMoveBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .in_the_inner_box_left .move_bar .inner_move_bar')
+const switchBar = document.querySelector('[__board__="__"] .main__btn__ .inner_box .switch')
+const canMove = document.querySelector('[__board__="__"] .main__btn__ .inner_box .can_move')
 
 
 
@@ -283,6 +283,34 @@ const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
     .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
 }
 
+const clickHandler = e => {
+  // console.info(e.target)
+  switch (e.target) {
+    case _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["default"]:
+      e.stopPropagation()
+      isMainBtnClick = !isMainBtnClick
+      isMainBtnClick
+        ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerBox"].style.display = 'flex'
+        : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerBox"].style.display = 'none'
+      break
+    case _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"]:
+      isCanMoveClick = !isCanMoveClick
+      isCanMoveClick
+        ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"].style.background = '#90EE90'
+        : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"].style.background = '#fff'
+      break
+    case _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"]:
+      isSwitchBarClick = !isSwitchBarClick
+      isSwitchBarClick
+        ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#90EE90',
+          _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'on')
+        : (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#fff',
+          _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'off')
+      break
+    default: ;
+  }
+}
+
 console.clear()
 
 Object(_utils_chrome_api_chrome_runtime_send_message__WEBPACK_IMPORTED_MODULE_3__["sendMessage"])({
@@ -368,33 +396,8 @@ window.addEventListener('mousemove', e => {
   })
 }, false)
 
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].onclick = e => {
-  e.stopPropagation()
-  isSwitchBarClick = !isSwitchBarClick
-  isSwitchBarClick
-    ? (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#90EE90',
-      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'on')
-    : (_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].style.background = '#fff',
-      _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["switchBar"].innerHTML = 'off')
-}
 
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"].onclick = e => {
-  e.stopPropagation()
-  isCanMoveClick = !isCanMoveClick
-  isCanMoveClick
-    ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"].style.background = '#90EE90'
-    : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["canMove"].style.background = '#fff'
-}
-
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["moveBar"].onclick = e => e.stopPropagation()
-
-_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["default"].onclick = e => {
-  e.stopPropagation()
-  isMainBtnClick = !isMainBtnClick
-  isMainBtnClick
-    ? _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerBox"].style.display = 'flex'
-    : _build_main_btn__WEBPACK_IMPORTED_MODULE_2__["innerBox"].style.display = 'none'
-}
+_build_main_btn__WEBPACK_IMPORTED_MODULE_2__["default"].onclick = clickHandler
 
 /***/ }),
 

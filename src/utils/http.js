@@ -8,11 +8,11 @@ const Http = (_ => {
 
   Http.prototype.json = function (config) {
     if (!_is(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     return core({
@@ -28,11 +28,11 @@ const Http = (_ => {
 
   Http.prototype.post = function (config) {
     if (!_is(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     return core({
@@ -48,11 +48,11 @@ const Http = (_ => {
 
   Http.prototype.get = function (config) {
     if (!_is(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     _is(data) && (url = `${url}${_return(data, '?')}`)

@@ -1,6 +1,6 @@
 
 export const forBrightnessHandler = (request, sender, sendResponse) => {
-  console.info(request, sender, sendResponse)
+  // console.info(request, sender, sendResponse)
 
   switch (request.type) {
     case 'GET_BRIGHT_NESS':

@@ -28,6 +28,34 @@ const SEND_SET_MAIN_BTN_LEFT_TOP = (left, top) => {
     .then(_ => console.log('延后执行 SEND_SET_MAIN_BTN_LEFT_TOP'))
 }
 
+const clickHandler = e => {
+  // console.info(e.target)
+  switch (e.target) {
+    case mainBtn:
+      e.stopPropagation()
+      isMainBtnClick = !isMainBtnClick
+      isMainBtnClick
+        ? innerBox.style.display = 'flex'
+        : innerBox.style.display = 'none'
+      break
+    case canMove:
+      isCanMoveClick = !isCanMoveClick
+      isCanMoveClick
+        ? canMove.style.background = '#90EE90'
+        : canMove.style.background = '#fff'
+      break
+    case switchBar:
+      isSwitchBarClick = !isSwitchBarClick
+      isSwitchBarClick
+        ? (switchBar.style.background = '#90EE90',
+          switchBar.innerHTML = 'on')
+        : (switchBar.style.background = '#fff',
+          switchBar.innerHTML = 'off')
+      break
+    default: ;
+  }
+}
+
 console.clear()
 
 sendMessage({
@@ -113,30 +141,5 @@ window.addEventListener('mousemove', e => {
   })
 }, false)
 
-switchBar.onclick = e => {
-  e.stopPropagation()
-  isSwitchBarClick = !isSwitchBarClick
-  isSwitchBarClick
-    ? (switchBar.style.background = '#90EE90',
-      switchBar.innerHTML = 'on')
-    : (switchBar.style.background = '#fff',
-      switchBar.innerHTML = 'off')
-}
 
-canMove.onclick = e => {
-  e.stopPropagation()
-  isCanMoveClick = !isCanMoveClick
-  isCanMoveClick
-    ? canMove.style.background = '#90EE90'
-    : canMove.style.background = '#fff'
-}
-
-moveBar.onclick = e => e.stopPropagation()
-
-mainBtn.onclick = e => {
-  e.stopPropagation()
-  isMainBtnClick = !isMainBtnClick
-  isMainBtnClick
-    ? innerBox.style.display = 'flex'
-    : innerBox.style.display = 'none'
-}
+mainBtn.onclick = clickHandler

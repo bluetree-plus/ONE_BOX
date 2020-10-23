@@ -97,9 +97,10 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bg/init */ "./src/bg/init.js");
 /* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bg_init__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _bg_for_brightness__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bg/for_brightness */ "./src/bg/for_brightness.js");
-/* harmony import */ var _utils_chrome_api_chrome_runtime_onmessage_addListener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_onmessage_addListener */ "./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js");
+/* harmony import */ var _bg_brightness_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bg/brightness/main */ "./src/bg/brightness/main.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_onmessage_add_listener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_onmessage_add_listener */ "./src/utils/chrome_api/chrome_runtime_onmessage_add_listener.js");
 /* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_oninstalled_add_listener */ "./src/utils/chrome_api/chrome_runtime_oninstalled_add_listener.js");
 
 
 
@@ -107,35 +108,45 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-Object(_utils_chrome_api_chrome_runtime_onmessage_addListener__WEBPACK_IMPORTED_MODULE_2__["addListener"])(
-  [
-    _bg_for_brightness__WEBPACK_IMPORTED_MODULE_1__["forBrightnessHandler"]
-  ]
+
+
+Object(_utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_4__["onInstalledAddListener"])(
+  data => {
+
+    // console.info(data)
+
+    Object(_utils_chrome_api_chrome_runtime_onmessage_add_listener__WEBPACK_IMPORTED_MODULE_2__["addListener"])(
+      [
+        _bg_brightness_main__WEBPACK_IMPORTED_MODULE_1__["forBrightnessHandler"]
+      ]
+    )
+
+    // 请求可以跨域
+    console.info(_utils_http__WEBPACK_IMPORTED_MODULE_3__["default"])
+
+    // $http.get({
+    //   url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
+    //   data: {
+    //     limti: 100
+    //   }
+    // })
+    //   .then(result => {
+    //     console.info(result)
+    //   })
+    //   .catch(error => {
+    //     console.info(error)
+    //   })
+
+  }
 )
-
-// 请求可以跨域
-console.info(_utils_http__WEBPACK_IMPORTED_MODULE_3__["default"])
-
-// $http.get({
-//   url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
-//   data: {
-//     limti: 100
-//   }
-// })
-//   .then(result => {
-//     console.info(result)
-//   })
-//   .catch(error => {
-//     console.info(error)
-//   })
 
 
 /***/ }),
 
-/***/ "./src/bg/for_brightness.js":
-/*!**********************************!*\
-  !*** ./src/bg/for_brightness.js ***!
-  \**********************************/
+/***/ "./src/bg/brightness/main.js":
+/*!***********************************!*\
+  !*** ./src/bg/brightness/main.js ***!
+  \***********************************/
 /*! exports provided: forBrightnessHandler */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -144,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forBrightnessHandler", function() { return forBrightnessHandler; });
 
 const forBrightnessHandler = (request, sender, sendResponse) => {
-  console.info(request, sender, sendResponse)
+  // console.info(request, sender, sendResponse)
 
   switch (request.type) {
     case 'GET_BRIGHT_NESS':
@@ -208,10 +219,24 @@ const baseTime = 5 * 60 * 1000
 
 /***/ }),
 
-/***/ "./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js":
-/*!**********************************************************************!*\
-  !*** ./src/utils/chrome_api/chrome_runtime_onmessage_addListener.js ***!
-  \**********************************************************************/
+/***/ "./src/utils/chrome_api/chrome_runtime_oninstalled_add_listener.js":
+/*!*************************************************************************!*\
+  !*** ./src/utils/chrome_api/chrome_runtime_oninstalled_add_listener.js ***!
+  \*************************************************************************/
+/*! exports provided: onInstalledAddListener */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onInstalledAddListener", function() { return onInstalledAddListener; });
+const onInstalledAddListener = (...args) => chrome.runtime.onInstalled.addListener(...args)
+
+/***/ }),
+
+/***/ "./src/utils/chrome_api/chrome_runtime_onmessage_add_listener.js":
+/*!***********************************************************************!*\
+  !*** ./src/utils/chrome_api/chrome_runtime_onmessage_add_listener.js ***!
+  \***********************************************************************/
 /*! exports provided: addListener */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -257,14 +282,14 @@ const core = ({
     }
     // console.info(typeof xhr.getAllResponseHeaders())
     xhr.status === 200
-      ? resolve(xhr.response)
-      : resolve(xhr.status)
+      ? resolve({ data: xhr.response })
+      : reject({ data: '[-1]', otherMes: xhr.status })
   }
   header && Object.entries(header).forEach(([k, v]) => k.toLowerCase() !== 'content-type' && xhr.setRequestHeader(k, v))
   xhr.setRequestHeader('content-type', type)
   xhr.responseType = responseType || 'json'
   xhr.timeout = time || _base_time__WEBPACK_IMPORTED_MODULE_0__["baseTime"]
-  xhr.onerror = _ => reject(_)
+  xhr.onerror = _ => reject({ data: '[-1]', otherMes: _ })
   xhr.send(data)
 })
 
@@ -292,11 +317,11 @@ const Http = (_ => {
 
   Http.prototype.json = function (config) {
     if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     return Object(_core_http__WEBPACK_IMPORTED_MODULE_2__["core"])({
@@ -312,11 +337,11 @@ const Http = (_ => {
 
   Http.prototype.post = function (config) {
     if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     return Object(_core_http__WEBPACK_IMPORTED_MODULE_2__["core"])({
@@ -332,11 +357,11 @@ const Http = (_ => {
 
   Http.prototype.get = function (config) {
     if (!Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(config)) {
-      return Promise.resolve('[-1]')
+      throw new Error('argument is not a object')
     }
     let { url } = config
     if (typeof url !== 'string') {
-      return Promise.resolve('[-1]')
+      throw new Error('url is not a string')
     }
     const { data, header, time, responseType } = config
     Object(_is_object__WEBPACK_IMPORTED_MODULE_0__["isObj"])(data) && (url = `${url}${Object(_return_specisl_string__WEBPACK_IMPORTED_MODULE_1__["returnStr"])(data, '?')}`)
