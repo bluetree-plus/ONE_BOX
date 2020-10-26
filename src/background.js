@@ -1,10 +1,12 @@
 'use strict';
 
 import './bg/init'
-import { forBrightnessHandler } from './bg/brightness/main'
-import { addListener } from './utils/chrome_api/chrome_runtime_onmessage_add_listener'
-import $http from './utils/http'
 import { onInstalledAddListener } from './utils/chrome_api/chrome_runtime_oninstalled_add_listener'
+import { addListener } from './utils/chrome_api/chrome_runtime_onmessage_add_listener'
+import { forBrightnessHandler } from './bg/brightness/handler'
+
+import $http from './utils/http'
+import zhihu from './other_functions/zhihu/request_meta'
 
 
 onInstalledAddListener(
@@ -18,14 +20,11 @@ onInstalledAddListener(
       ]
     )
 
-    // 请求可以跨域
-    console.info($http)
+    // open(chrome.runtime.getURL('./content.js'))
 
-    // $http.get({
-    //   url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
-    //   data: {
-    //     limti: 100
-    //   }
+    // $http[zhihu.method]({
+    //   url: zhihu.url,
+    //   data: zhihu.data
     // })
     //   .then(result => {
     //     console.info(result)

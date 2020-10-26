@@ -116,6 +116,12 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * 构建主按钮
  */
+const arr = [
+  {
+    attr: 'zhihu',
+    name: '知乎热榜'
+  }
+]
 
 const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'main__btn__' },
   [
@@ -127,8 +133,9 @@ const mainBtn = Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])(
           Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'inner_move_bar' })
         ])
       ]),
-      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_middle' }),
-      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_right' })
+      Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'in_the_inner_box_middle' },
+        arr.map(_ => Object(_utils_create_element__WEBPACK_IMPORTED_MODULE_0__["h"])('div', { class: 'item', [_.attr]: '__' }, [_.name]))
+      )
     ])
   ]
 )
@@ -414,10 +421,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _other_functions_zhihu_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./other_functions/zhihu/main */ "./src/other_functions/zhihu/main.js");
 /* harmony import */ var _other_functions_zhihu_main__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_other_functions_zhihu_main__WEBPACK_IMPORTED_MODULE_1__);
 
-/**
- * 处理夜间模式以及可视化交互逻辑
- */
-
 
 
 /***/ }),
@@ -429,7 +432,14 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-console.info('知乎')
+
+
+const zhihu = document.querySelector('[__board__="__"] .main__btn__ .inner_box .in_the_inner_box_middle .item[zhihu]')
+
+zhihu.onclick = e => {
+  e.stopPropagation()
+  console.info('滑稽')
+}
 
 /***/ }),
 

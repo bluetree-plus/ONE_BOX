@@ -18,8 +18,8 @@ export const core = ({
     }
     // console.info(typeof xhr.getAllResponseHeaders())
     xhr.status === 200
-      ? resolve({ data: xhr.response })
-      : reject({ data: '[-1]', otherMes: xhr.status })
+      ? resolve({ data: xhr.response, otherMes: 'success' })
+      : reject({ data: '[-1]', otherMes: `status: ${xhr.status}` })
   }
   header && Object.entries(header).forEach(([k, v]) => k.toLowerCase() !== 'content-type' && xhr.setRequestHeader(k, v))
   xhr.setRequestHeader('content-type', type)

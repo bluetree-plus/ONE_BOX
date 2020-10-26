@@ -2,6 +2,12 @@ import { h } from '../utils/create_element'
 /**
  * 构建主按钮
  */
+const arr = [
+  {
+    attr: 'zhihu',
+    name: '知乎热榜'
+  }
+]
 
 const mainBtn = h('div', { class: 'main__btn__' },
   [
@@ -13,8 +19,9 @@ const mainBtn = h('div', { class: 'main__btn__' },
           h('div', { class: 'inner_move_bar' })
         ])
       ]),
-      h('div', { class: 'in_the_inner_box_middle' }),
-      h('div', { class: 'in_the_inner_box_right' })
+      h('div', { class: 'in_the_inner_box_middle' },
+        arr.map(_ => h('div', { class: 'item', [_.attr]: '__' }, [_.name]))
+      )
     ])
   ]
 )

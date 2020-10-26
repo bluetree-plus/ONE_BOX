@@ -97,10 +97,11 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bg/init */ "./src/bg/init.js");
 /* harmony import */ var _bg_init__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bg_init__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _bg_brightness_main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bg/brightness/main */ "./src/bg/brightness/main.js");
+/* harmony import */ var _utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_oninstalled_add_listener */ "./src/utils/chrome_api/chrome_runtime_oninstalled_add_listener.js");
 /* harmony import */ var _utils_chrome_api_chrome_runtime_onmessage_add_listener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_onmessage_add_listener */ "./src/utils/chrome_api/chrome_runtime_onmessage_add_listener.js");
-/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
-/* harmony import */ var _utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/chrome_api/chrome_runtime_oninstalled_add_listener */ "./src/utils/chrome_api/chrome_runtime_oninstalled_add_listener.js");
+/* harmony import */ var _bg_brightness_handler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./bg/brightness/handler */ "./src/bg/brightness/handler.js");
+/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/http */ "./src/utils/http.js");
+/* harmony import */ var _other_functions_zhihu_request_meta__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./other_functions/zhihu/request_meta */ "./src/other_functions/zhihu/request_meta.js");
 
 
 
@@ -110,25 +111,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-Object(_utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_4__["onInstalledAddListener"])(
+
+
+Object(_utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORTED_MODULE_1__["onInstalledAddListener"])(
   data => {
 
     // console.info(data)
 
     Object(_utils_chrome_api_chrome_runtime_onmessage_add_listener__WEBPACK_IMPORTED_MODULE_2__["addListener"])(
       [
-        _bg_brightness_main__WEBPACK_IMPORTED_MODULE_1__["forBrightnessHandler"]
+        _bg_brightness_handler__WEBPACK_IMPORTED_MODULE_3__["forBrightnessHandler"]
       ]
     )
 
-    // 请求可以跨域
-    console.info(_utils_http__WEBPACK_IMPORTED_MODULE_3__["default"])
+    // open(chrome.runtime.getURL('./content.js'))
 
-    // $http.get({
-    //   url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
-    //   data: {
-    //     limti: 100
-    //   }
+    // $http[zhihu.method]({
+    //   url: zhihu.url,
+    //   data: zhihu.data
     // })
     //   .then(result => {
     //     console.info(result)
@@ -143,10 +143,10 @@ Object(_utils_chrome_api_chrome_runtime_oninstalled_add_listener__WEBPACK_IMPORT
 
 /***/ }),
 
-/***/ "./src/bg/brightness/main.js":
-/*!***********************************!*\
-  !*** ./src/bg/brightness/main.js ***!
-  \***********************************/
+/***/ "./src/bg/brightness/handler.js":
+/*!**************************************!*\
+  !*** ./src/bg/brightness/handler.js ***!
+  \**************************************/
 /*! exports provided: forBrightnessHandler */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -205,6 +205,25 @@ if (localStorage.getItem('__main_btn_top__') === null) {
 
 /***/ }),
 
+/***/ "./src/other_functions/zhihu/request_meta.js":
+/*!***************************************************!*\
+  !*** ./src/other_functions/zhihu/request_meta.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  url: 'https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total',
+  method: 'get',
+  data: {
+    limit: 100
+  }
+});
+
+/***/ }),
+
 /***/ "./src/utils/base_time.js":
 /*!********************************!*\
   !*** ./src/utils/base_time.js ***!
@@ -245,7 +264,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addListener", function() { return addListener; });
 const addListener = callbacks => (
   chrome.runtime.onMessage.addListener(
-    (request, sender, sendResponse) => callbacks.forEach(_ => _(request, sender, sendResponse))
+    (request, sender, sendResponse) => {
+      callbacks.forEach(_ => _(request, sender, sendResponse))
+      // 这里必须显示的返回 true
+      // 才能在监听回调中启用异步
+      // 这里是一个坑点，希望看到这里的朋友能够注意到
+      return true
+    }
   )
 )
 
@@ -282,8 +307,8 @@ const core = ({
     }
     // console.info(typeof xhr.getAllResponseHeaders())
     xhr.status === 200
-      ? resolve({ data: xhr.response })
-      : reject({ data: '[-1]', otherMes: xhr.status })
+      ? resolve({ data: xhr.response, otherMes: 'success' })
+      : reject({ data: '[-1]', otherMes: `status: ${xhr.status}` })
   }
   header && Object.entries(header).forEach(([k, v]) => k.toLowerCase() !== 'content-type' && xhr.setRequestHeader(k, v))
   xhr.setRequestHeader('content-type', type)
